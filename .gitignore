@@ -1,0 +1,29 @@
+# Maven
+target/
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.versionsBackup
+pom.xml.next
+release.properties
+
+# IDEs
+.idea/
+*.iml
+.vscode/
+
+# Sistema
+.DS_Store
+Thumbs.db
+
+# Config sensibles
+application.properties
+application.yml
+
+# Logs
+*.log
+
+# Build
+*.class
+
+# Test outputs
+surefire-reports/
