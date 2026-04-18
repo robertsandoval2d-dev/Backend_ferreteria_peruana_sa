@@ -23,7 +23,7 @@ public class SecurityConfig {
 
             // 🔐 configuración de rutas
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/logistica/auth/**").permitAll() // público
+                .requestMatchers("/logistica/**").permitAll() // público
                 .anyRequest().authenticated()           // protegido
             )
             .userDetailsService(userDetailsService)

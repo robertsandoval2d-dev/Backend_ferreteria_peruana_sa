@@ -20,7 +20,7 @@ public class CustomUserDetailService implements UserDetailsService{
         return org.springframework.security.core.userdetails.User.builder()
                 .username(usuario.getUsername())
                 .password(usuario.getPassword())
-                .authorities(usuario.getRol().name())
+                .authorities(usuario.getRol().getNombre()) // rol como autoridad
                 .disabled(!usuario.isActivo())
                 .build();
     }

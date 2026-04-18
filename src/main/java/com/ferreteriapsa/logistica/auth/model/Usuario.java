@@ -16,7 +16,8 @@ public class Usuario {
     @Column(nullable = false)
     private String password;
 
-    @Enumerated(EnumType.STRING)
+    @ManyToOne
+    @JoinColumn(name = "rol_id")
     private Rol rol;
 
     @Column(nullable = false)

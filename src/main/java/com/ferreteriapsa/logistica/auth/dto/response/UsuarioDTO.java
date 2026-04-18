@@ -1,12 +1,14 @@
-package com.ferreteriapsa.logistica.auth.dto.request;
+package com.ferreteriapsa.logistica.auth.dto.response;
 
-public class RegistroRequest {
-    
+public class UsuarioDTO {
     private String username;
-    private String password;
     private String rol;
 
-    public RegistroRequest() {
+    public UsuarioDTO() {}
+
+    public UsuarioDTO(String username, String rol) {
+        this.username = username;
+        this.rol = rol;
     }
 
     public String getUsername() {
@@ -15,14 +17,6 @@ public class RegistroRequest {
 
     public void setUsername(String username) {
         this.username = username;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
     }
 
     public String getRol() {
