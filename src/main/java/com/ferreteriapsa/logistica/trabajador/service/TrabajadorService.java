@@ -19,25 +19,18 @@ public class TrabajadorService {
     private final AlmacenRepository almacenRepository;
     private final TiendaRepository tiendaRepository;
     private final LineaProductoRepository lineaRepository;
-    private final TrabajadorAlmacenRepository trabajadorAlmacenRepository;
-    private final TrabajadorTiendaRepository trabajadorTiendaRepository;
-    private final TrabajadorLineaRepository trabajadorLineaRepository;
     
     public TrabajadorService(AutenticacionInterface autenticacionService, TrabajadorRepository trabajadorRepository,
-        AlmacenRepository almacenRepository, TiendaRepository tiendaRepository, LineaProductoRepository lineaRepository,
-        TrabajadorAlmacenRepository trabajadorAlmacenRepository, TrabajadorTiendaRepository trabajadorTiendaRepository,
-        TrabajadorLineaRepository trabajadorLineaRepository) {
+        AlmacenRepository almacenRepository, TiendaRepository tiendaRepository, LineaProductoRepository lineaRepository) {
         this.autenticacionService = autenticacionService;
         this.trabajadorRepository = trabajadorRepository;
         this.almacenRepository = almacenRepository;
         this.tiendaRepository = tiendaRepository;
         this.lineaRepository = lineaRepository;
-        this.trabajadorAlmacenRepository = trabajadorAlmacenRepository;
-        this.trabajadorTiendaRepository = trabajadorTiendaRepository;
-        this.trabajadorLineaRepository = trabajadorLineaRepository;
 
     }
 
+    @SuppressWarnings("null")
     @Transactional
     public TrabajadorDTO registrarTrabajadorCompleto(TrabajadorRequest request) {
 
@@ -50,8 +43,6 @@ public class TrabajadorService {
         trabajador.setDni(request.getDni());
         trabajador.setUsuario(usuario);
 
-        trabajador = trabajadorRepository.save(trabajador);
-
         // 3. Obtener rol
         String rol = usuario.getRol().getNombre().toLowerCase();
 
@@ -62,33 +53,27 @@ public class TrabajadorService {
                 Almacen almacen = almacenRepository.findById(request.getIdReferencia())
                         .orElseThrow(() -> new RuntimeException("Almacén no encontrado"));
 
-                TrabajadorAlmacen ta = new TrabajadorAlmacen();
-                ta.setTrabajador(trabajador);
-                ta.setAlmacen(almacen);
+                trabajador.setAlmacen(almacen);
 
-                trabajadorAlmacenRepository.save(ta);
+                trabajador = trabajadorRepository.save(trabajador);
                 break;
 
             case "administrador_de_tienda":
                 Tienda tienda = tiendaRepository.findById(request.getIdReferencia())
                         .orElseThrow(() -> new RuntimeException("Tienda no encontrada"));
 
-                TrabajadorTienda tt = new TrabajadorTienda();
-                tt.setTrabajador(trabajador);
-                tt.setTienda(tienda);
+                tienda.setAdministrador(trabajador);
 
-                trabajadorTiendaRepository.save(tt);
+                tiendaRepository.save(tienda);
                 break;
 
             case "jefe_de_linea":
                 LineaProducto linea = lineaRepository.findById(request.getIdReferencia())
                         .orElseThrow(() -> new RuntimeException("Línea no encontrada"));
 
-                TrabajadorLinea tl = new TrabajadorLinea();
-                tl.setTrabajador(trabajador);
-                tl.setLinea(linea);
+                linea.setJefeDeLinea(trabajador);
 
-                trabajadorLineaRepository.save(tl);
+                lineaRepository.save(linea);
                 break;
 
             default:

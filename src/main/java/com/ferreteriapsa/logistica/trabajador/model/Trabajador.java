@@ -22,6 +22,10 @@ public class Trabajador {
     @JoinColumn(name = "usuario_id", nullable = false, unique = true)
     private Usuario usuario;
 
+    @ManyToOne
+    @JoinColumn(name = "almacen_id")
+    private Almacen almacen;
+
     // constructores
     public Trabajador() {}
 
@@ -59,6 +63,12 @@ public class Trabajador {
 
     public void setUsuario(Usuario usuario) {
         this.usuario = usuario;
+    }
+    public Almacen getAlmacen() {
+        return almacen;
+    }
+    public void setAlmacen(Almacen almacen) {
+        this.almacen = almacen;
     }
 
 }

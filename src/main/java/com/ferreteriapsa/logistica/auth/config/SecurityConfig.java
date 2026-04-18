@@ -24,7 +24,7 @@ public class SecurityConfig {
             // 🔐 configuración de rutas
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/logistica/**").permitAll() // público
-                .anyRequest().authenticated()           // protegido
+                .anyRequest().authenticated()         // protegido
             )
             .userDetailsService(userDetailsService)
             .formLogin(form -> form.disable()); // 🔥 sin login HTML

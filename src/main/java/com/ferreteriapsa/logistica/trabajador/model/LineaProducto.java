@@ -15,6 +15,10 @@ public class LineaProducto {
 
     private String descripcion;
 
+    @ManyToOne(cascade = CascadeType.PERSIST)
+    @JoinColumn(name = "jefe_de_linea_id")
+    private Trabajador jefeDeLinea;
+
     // constructores
     public LineaProducto() {}
 
@@ -43,5 +47,11 @@ public class LineaProducto {
 
     public void setDescripcion(String descripcion) {
         this.descripcion = descripcion;
+    }
+    public Trabajador getJefeDeLinea() {
+        return jefeDeLinea;
+    }
+    public void setJefeDeLinea(Trabajador jefeDeLinea) {
+        this.jefeDeLinea = jefeDeLinea;
     }
 }

@@ -17,6 +17,10 @@ public class Tienda {
 
     private String ciudad;
 
+    @OneToOne(cascade = CascadeType.PERSIST)
+    @JoinColumn(name="administrador_id")
+    private Trabajador administrador;
+
     // constructores
     public Tienda() {}
 
@@ -54,5 +58,11 @@ public class Tienda {
 
     public void setCiudad(String ciudad) {
         this.ciudad = ciudad;
+    }
+    public Trabajador getAdministrador() {
+        return administrador;
+    }
+    public void setAdministrador(Trabajador administrador) {
+        this.administrador = administrador;
     }
 }
