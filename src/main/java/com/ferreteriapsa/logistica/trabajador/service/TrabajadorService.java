@@ -76,6 +76,10 @@ public class TrabajadorService {
                 lineaRepository.save(linea);
                 break;
 
+            case "admin":
+                trabajador = trabajadorRepository.save(trabajador);
+                break;
+
             default:
                 throw new RuntimeException("Rol no válido para asignación");
         }

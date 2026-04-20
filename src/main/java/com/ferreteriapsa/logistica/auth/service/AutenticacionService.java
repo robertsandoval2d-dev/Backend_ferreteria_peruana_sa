@@ -6,18 +6,21 @@ import org.springframework.stereotype.Service;
 import com.ferreteriapsa.logistica.auth.model.*;
 import com.ferreteriapsa.logistica.auth.repository.*;
 import com.ferreteriapsa.logistica.auth.dto.request.UsuarioRequest;
-import com.ferreteriapsa.logistica.auth.dto.response.UsuarioDTO;
+import com.ferreteriapsa.logistica.auth.dto.response.AuthResponse;
+import com.ferreteriapsa.logistica.auth.config.JwtService;
 
 @Service
 public class AutenticacionService implements AutenticacionInterface{
+    private final JwtService jwtService;
     private final UsuarioRepository usuarioRepository;
     private final RolRepository rolRepository;
     private final PasswordEncoder passwordEncoder;
 
-    public AutenticacionService(UsuarioRepository usuarioRepository, RolRepository rolRepository, PasswordEncoder passwordEncoder) {
+    public AutenticacionService(UsuarioRepository usuarioRepository, RolRepository rolRepository, PasswordEncoder passwordEncoder, JwtService jwtService) {
         this.usuarioRepository = usuarioRepository;
         this.rolRepository = rolRepository;
         this.passwordEncoder = passwordEncoder;
+        this.jwtService = jwtService;
     }
 
     @Override
@@ -43,7 +46,7 @@ public class AutenticacionService implements AutenticacionInterface{
 
     }
 
-    public UsuarioDTO login(UsuarioRequest request) {
+    public AuthResponse login(UsuarioRequest request) {
 
         // 1. Buscar usuario
         Usuario usuario = usuarioRepository.findByUsername(request.getUsername())
@@ -59,7 +62,12 @@ public class AutenticacionService implements AutenticacionInterface{
             throw new RuntimeException("Contraseña incorrecta");
         }
 
-        // 4. Login correcto
-        return new UsuarioDTO(usuario.getUsername(), usuario.getRol().getNombre());
+        // 4. Generar token
+         String token = jwtService.generateToken(usuario);
+
+        // 5. Devolver token
+        return new AuthResponse(token);
+
+        //return new UsuarioDTO(usuario.getUsername(), usuario.getRol().getNombre());
     }
 }

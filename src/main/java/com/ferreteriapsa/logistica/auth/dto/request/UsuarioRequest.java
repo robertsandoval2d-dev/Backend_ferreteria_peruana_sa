@@ -4,7 +4,7 @@ public class UsuarioRequest {
     
     private String username;
     private String password;
-    private String rol;
+
 
     public UsuarioRequest() {
     }
@@ -25,11 +25,5 @@ public class UsuarioRequest {
         this.password = password;
     }
 
-    public String getRol() {
-        return rol;
-    }
 
-    public void setRol(String rol) {
-        this.rol = rol;
-    }
 }

@@ -4,7 +4,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import com.ferreteriapsa.logistica.auth.dto.request.UsuarioRequest;
-import com.ferreteriapsa.logistica.auth.dto.response.UsuarioDTO;
+import com.ferreteriapsa.logistica.auth.dto.response.AuthResponse;
 import com.ferreteriapsa.logistica.auth.service.AutenticacionService;
 
 @RestController
@@ -25,8 +25,8 @@ public class AutenticacionController {
 
     //login
     @PostMapping("/login")
-    public ResponseEntity<UsuarioDTO> login(@RequestBody UsuarioRequest request) {
-        UsuarioDTO usuario = autenticacionService.login(request);
+    public ResponseEntity<AuthResponse> login(@RequestBody UsuarioRequest request) {
+        AuthResponse usuario = autenticacionService.login(request);
         return ResponseEntity.ok(usuario);
     }
 

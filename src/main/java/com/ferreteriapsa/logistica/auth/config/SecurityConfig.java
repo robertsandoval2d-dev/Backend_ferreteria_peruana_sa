@@ -4,14 +4,13 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.web.SecurityFilterChain;
-import com.ferreteriapsa.logistica.auth.service.CustomUserDetailService;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 public class SecurityConfig {
-    private final CustomUserDetailService userDetailsService;
-
-    public SecurityConfig(CustomUserDetailService userDetailsService) {
-        this.userDetailsService = userDetailsService;
+    private final JwtFilter jwtFilter;
+    public SecurityConfig(JwtFilter jwtFilter) {
+        this.jwtFilter = jwtFilter;
     }
 
     @Bean
@@ -23,11 +22,12 @@ public class SecurityConfig {
 
             // 🔐 configuración de rutas
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/logistica/**").permitAll() // público
+                .requestMatchers("/logistica/auth/login").permitAll() // público
+                .requestMatchers("/logistica/trabajadores/registrar").hasRole("ADMIN")
                 .anyRequest().authenticated()         // protegido
             )
-            .userDetailsService(userDetailsService)
-            .formLogin(form -> form.disable()); // 🔥 sin login HTML
+            .formLogin(form -> form.disable())
+            .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class); // sin login HTML
 
         return http.build();
     }
