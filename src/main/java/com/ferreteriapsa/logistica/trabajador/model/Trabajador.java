@@ -9,7 +9,7 @@ public class Trabajador {
     // atributos    
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long trabajador_id;
 
     @Column(nullable = false)
     private String nombre;
@@ -23,8 +23,9 @@ public class Trabajador {
     private Usuario usuario;
 
     @ManyToOne
-    @JoinColumn(name = "almacen_id")
-    private Almacen almacen;
+    @JoinColumn(name = "tienda_id", nullable = true)
+    private Tienda tienda;
+
 
     // constructores
     public Trabajador() {}
@@ -38,7 +39,7 @@ public class Trabajador {
     // getters y setters
 
     public Long getId() {
-        return id;
+        return trabajador_id;
     }
 
     public String getNombre() {
@@ -64,11 +65,11 @@ public class Trabajador {
     public void setUsuario(Usuario usuario) {
         this.usuario = usuario;
     }
-    public Almacen getAlmacen() {
-        return almacen;
+    public Tienda getTienda() {
+        return tienda;
     }
-    public void setAlmacen(Almacen almacen) {
-        this.almacen = almacen;
+    public void setTienda(Tienda tienda) {
+        this.tienda = tienda;
     }
 
 }

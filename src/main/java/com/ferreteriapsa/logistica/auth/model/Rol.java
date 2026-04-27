@@ -7,7 +7,7 @@ import jakarta.persistence.*;
 public class Rol {
     //atributos
     @Id
-    private Long id;
+    private Long rol_id;
 
     @Column(nullable = false, unique = true)
     private String nombre;
@@ -18,10 +18,10 @@ public class Rol {
 
     //getters y setters
     public Long getId() {
-        return id;
+        return rol_id;
     }
     public void setId(Long id) {
-        this.id = id;
+        this.rol_id = id;
     }
     public String getNombre() {
         return nombre;

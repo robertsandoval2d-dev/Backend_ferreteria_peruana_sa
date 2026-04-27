@@ -1,5 +1,6 @@
 package com.ferreteriapsa.logistica.auth.config;
 
+import io.jsonwebtoken.JwtBuilder;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import java.security.Key;
@@ -19,14 +20,29 @@ public class JwtService {
         return Keys.hmacShaKeyFor(SECRET.getBytes());
     }
 
+    // public String generateToken(Usuario usuario) {
+    //     return Jwts.builder()
+    //             .setSubject(usuario.getUsername())
+    //             .claim("rol", usuario.getRol().getNombre())
+    //             .claim("trabajadorId",usuario.getTrabajador().getId())
+    //             .setIssuedAt(new Date())
+    //             .setExpiration(new Date(System.currentTimeMillis() + 86400000)) // 1 día
+    //             .signWith(getKey())
+    //             .compact();
+    // }
     public String generateToken(Usuario usuario) {
-        return Jwts.builder()
+        JwtBuilder builder = Jwts.builder()
                 .setSubject(usuario.getUsername())
                 .claim("rol", usuario.getRol().getNombre())
                 .setIssuedAt(new Date())
-                .setExpiration(new Date(System.currentTimeMillis() + 86400000)) // 1 día
-                .signWith(getKey())
-                .compact();
+                .setExpiration(new Date(System.currentTimeMillis() + 86400000))//1 día
+                .signWith(getKey());
+
+        if (usuario.getTrabajador() != null) {
+            builder.claim("trabajadorId", usuario.getTrabajador().getId());
+        }
+
+        return builder.compact();
     }
 
     public String extractUsername(String token) {
@@ -45,6 +61,15 @@ public class JwtService {
                 .parseClaimsJws(token)
                 .getBody()
                 .get("rol", String.class);
+    }
+
+    public Long extractTrabajadorId(String token) {
+        return Jwts.parserBuilder()
+                .setSigningKey(getKey())
+                .build()
+                .parseClaimsJws(token)
+                .getBody()
+                .get("trabajadorId", Long.class);
     }
 
     public boolean isTokenValid(String token) {

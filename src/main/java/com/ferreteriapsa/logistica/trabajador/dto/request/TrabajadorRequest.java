@@ -11,7 +11,8 @@ public class TrabajadorRequest {
     private String rol;
 
     // asignación
-    private Long idReferencia;
+    private Long idTienda;
+    private Long idLinea;
 
     public TrabajadorRequest() {
     }
@@ -20,47 +21,28 @@ public class TrabajadorRequest {
         return nombre;
     }
 
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
-    }
-
     public String getDni() {
         return dni;
-    }
-
-    public void setDni(String dni) {
-        this.dni = dni;
     }
 
     public String getUsername() {
         return username;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
     public String getPassword() {
         return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
     }
 
     public String getRol() {
         return rol;
     }
 
-    public void setRol(String rol) {
-        this.rol = rol;
+    public Long getIdTienda() {
+        return idTienda;
     }
 
-    public Long getIdReferencia() {
-        return idReferencia;
+    public Long getIdLinea() {
+        return idLinea;
     }
 
-    public void setIdReferencia(Long idReferencia) {
-        this.idReferencia = idReferencia;
-    }
 }

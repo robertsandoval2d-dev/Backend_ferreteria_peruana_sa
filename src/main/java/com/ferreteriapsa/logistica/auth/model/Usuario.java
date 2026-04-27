@@ -1,5 +1,7 @@
 package com.ferreteriapsa.logistica.auth.model;
 
+import com.ferreteriapsa.logistica.trabajador.model.Trabajador;
+
 import jakarta.persistence.*;
 
 @Entity
@@ -8,7 +10,7 @@ public class Usuario {
     // atributos
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long usuario_id;
   
     @Column(nullable = false, unique = true)
     private String username;
@@ -23,6 +25,9 @@ public class Usuario {
     @Column(nullable = false)
     private boolean activo=true;
 
+    @OneToOne(mappedBy = "usuario")
+    private Trabajador trabajador;
+
     // constructores
     public Usuario(){
         
@@ -30,10 +35,10 @@ public class Usuario {
 
     // getters y setters
     public Long getId() {
-        return id;
+        return usuario_id;
     }
     public void setId(Long id) {
-        this.id = id;
+        this.usuario_id = id;
     }
     public String getUsername() {
         return username;
@@ -58,6 +63,9 @@ public class Usuario {
     }
     public void setActivo(boolean activo) {
         this.activo = activo;
+    }
+    public Trabajador getTrabajador() {
+        return trabajador;
     }
 
 }

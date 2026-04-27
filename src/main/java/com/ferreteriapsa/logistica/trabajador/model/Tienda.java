@@ -1,6 +1,7 @@
 package com.ferreteriapsa.logistica.trabajador.model;
 
 import jakarta.persistence.*;
+import java.util.List;
 
 @Entity
 @Table(name = "tiendas")
@@ -8,7 +9,7 @@ public class Tienda {
     //atributos
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long tienda_id;
 
     @Column(nullable = false)
     private String nombre;
@@ -18,8 +19,14 @@ public class Tienda {
     private String ciudad;
 
     @OneToOne(cascade = CascadeType.PERSIST)
-    @JoinColumn(name="administrador_id")
-    private Trabajador administrador;
+    @JoinColumn(name="almacen_id")
+    private Almacen almacen;
+
+    @OneToMany(mappedBy = "tienda")
+    private List<Trabajador> trabajadores;
+
+    @OneToMany(mappedBy = "tienda")
+    private List<LineaProducto> lineaProductos;
 
     // constructores
     public Tienda() {}
@@ -33,7 +40,7 @@ public class Tienda {
     // getters y setters
 
     public Long getId() {
-        return id;
+        return tienda_id;
     }
 
     public String getNombre() {
@@ -59,10 +66,22 @@ public class Tienda {
     public void setCiudad(String ciudad) {
         this.ciudad = ciudad;
     }
-    public Trabajador getAdministrador() {
-        return administrador;
+    public Almacen getAlmacen() {
+        return almacen;
     }
-    public void setAdministrador(Trabajador administrador) {
-        this.administrador = administrador;
+    public void setAlmacen(Almacen almacen) {
+        this.almacen = almacen;
+    }
+    public List<Trabajador> getTrabajadores() {
+        return trabajadores;
+    }
+    public void setTrabajador(List<Trabajador> trabajadores) {
+        this.trabajadores = trabajadores;
+    }
+    public List<LineaProducto> getLineaProductos() {
+        return lineaProductos;
+    }
+    public void setLineaProductos(List<LineaProducto> lineaProductos) {
+        this.lineaProductos = lineaProductos;
     }
 }

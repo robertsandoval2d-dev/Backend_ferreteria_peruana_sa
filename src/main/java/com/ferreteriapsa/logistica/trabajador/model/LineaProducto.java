@@ -8,16 +8,20 @@ public class LineaProducto {
     //atributos
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long linea_producto_id;
 
     @Column(nullable = false, unique = true)
     private String nombre;
 
     private String descripcion;
 
-    @ManyToOne(cascade = CascadeType.PERSIST)
+    @OneToOne
     @JoinColumn(name = "jefe_de_linea_id")
     private Trabajador jefeDeLinea;
+
+    @ManyToOne
+    @JoinColumn(name = "tienda_id", nullable = false)
+    private Tienda tienda;
 
     // constructores
     public LineaProducto() {}
@@ -30,7 +34,7 @@ public class LineaProducto {
     // getters y setters
 
     public Long getId() {
-        return id;
+        return linea_producto_id;
     }
 
     public String getNombre() {

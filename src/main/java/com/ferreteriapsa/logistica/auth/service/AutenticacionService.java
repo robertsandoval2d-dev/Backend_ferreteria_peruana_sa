@@ -68,6 +68,5 @@ public class AutenticacionService implements AutenticacionInterface{
         // 5. Devolver token
         return new AuthResponse(token);
 
-        //return new UsuarioDTO(usuario.getUsername(), usuario.getRol().getNombre());
     }
 }

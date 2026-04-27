@@ -43,6 +43,13 @@ public class TrabajadorService {
         trabajador.setDni(request.getDni());
         trabajador.setUsuario(usuario);
 
+        if(request.getIdTienda() != null){
+            Tienda tienda = tiendaRepository.findById(request.getIdTienda())
+                .orElseThrow(() -> new RuntimeException("Almacén no encontrado"));
+
+            trabajador.setTienda(tienda);
+        }
+
         // 3. Obtener rol
         String rol = usuario.getRol().getNombre().toLowerCase();
 
@@ -50,25 +57,17 @@ public class TrabajadorService {
         switch (rol) {
 
             case "almacenero":
-                Almacen almacen = almacenRepository.findById(request.getIdReferencia())
-                        .orElseThrow(() -> new RuntimeException("Almacén no encontrado"));
-
-                trabajador.setAlmacen(almacen);
-
                 trabajador = trabajadorRepository.save(trabajador);
                 break;
 
             case "administrador_de_tienda":
-                Tienda tienda = tiendaRepository.findById(request.getIdReferencia())
-                        .orElseThrow(() -> new RuntimeException("Tienda no encontrada"));
-
-                tienda.setAdministrador(trabajador);
-
-                tiendaRepository.save(tienda);
+                trabajador = trabajadorRepository.save(trabajador);
                 break;
 
             case "jefe_de_linea":
-                LineaProducto linea = lineaRepository.findById(request.getIdReferencia())
+                trabajador = trabajadorRepository.save(trabajador);
+
+                LineaProducto linea = lineaRepository.findById(request.getIdLinea())
                         .orElseThrow(() -> new RuntimeException("Línea no encontrada"));
 
                 linea.setJefeDeLinea(trabajador);
