@@ -16,15 +16,13 @@ import jakarta.transaction.Transactional;
 public class TrabajadorService {
     private final AutenticacionInterface autenticacionService;
     private final TrabajadorRepository trabajadorRepository;
-    private final AlmacenRepository almacenRepository;
     private final TiendaRepository tiendaRepository;
     private final LineaProductoRepository lineaRepository;
     
     public TrabajadorService(AutenticacionInterface autenticacionService, TrabajadorRepository trabajadorRepository,
-        AlmacenRepository almacenRepository, TiendaRepository tiendaRepository, LineaProductoRepository lineaRepository) {
+        TiendaRepository tiendaRepository, LineaProductoRepository lineaRepository) {
         this.autenticacionService = autenticacionService;
         this.trabajadorRepository = trabajadorRepository;
-        this.almacenRepository = almacenRepository;
         this.tiendaRepository = tiendaRepository;
         this.lineaRepository = lineaRepository;
 

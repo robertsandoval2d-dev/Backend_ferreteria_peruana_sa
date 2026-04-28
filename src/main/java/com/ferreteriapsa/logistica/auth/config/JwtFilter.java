@@ -4,14 +4,14 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import com.ferreteriapsa.logistica.auth.model.Usuario;
-import com.ferreteriapsa.logistica.auth.repository.UsuarioRepository;
+
 import java.io.IOException;
 import java.util.List;
 @Component
@@ -19,9 +19,6 @@ public class JwtFilter extends OncePerRequestFilter {
 
     @Autowired
     private JwtService jwtService;
-
-    @Autowired
-    private UsuarioRepository usuarioRepository;
 
     @SuppressWarnings("null")
     @Override
@@ -42,25 +39,24 @@ public class JwtFilter extends OncePerRequestFilter {
         String token = header.substring(7);
 
         // 3. Validación del token
-        if (jwtService.isTokenValid(token)) {
+        if (jwtService.isTokenValid(token) &&
+            SecurityContextHolder.getContext().getAuthentication() == null) {
 
             String username = jwtService.extractUsername(token);
+            Long trabajadorId = jwtService.extractTrabajadorId(token);
+            String rol = jwtService.extractRol(token);
 
-            Usuario usuario = usuarioRepository.findByUsername(username).orElse(null);
+            var authorities = List.of(
+                new SimpleGrantedAuthority("ROLE_" + rol)
+            );
 
-            if (usuario != null) {
+            CustomUserPrincipal principal = new CustomUserPrincipal(username, trabajadorId, rol);
+            UsernamePasswordAuthenticationToken auth =
+                    new UsernamePasswordAuthenticationToken(principal, null, authorities);
 
-                String rol = jwtService.extractRol(token);
-
-                var authorities = List.of(
-                    new SimpleGrantedAuthority("ROLE_" + rol)
-                );
-                UsernamePasswordAuthenticationToken auth =
-                        new UsernamePasswordAuthenticationToken(usuario, null, authorities);
-
-                SecurityContextHolder.getContext().setAuthentication(auth);
-            }
+            SecurityContextHolder.getContext().setAuthentication(auth);
         }
+
 
         // 4. Continuar la petición
         filterChain.doFilter(request, response);
