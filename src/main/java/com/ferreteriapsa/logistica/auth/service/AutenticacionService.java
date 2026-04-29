@@ -2,6 +2,8 @@ package com.ferreteriapsa.logistica.auth.service;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
+import org.springframework.http.HttpStatus;
 
 import com.ferreteriapsa.logistica.auth.model.*;
 import com.ferreteriapsa.logistica.auth.repository.*;
@@ -27,7 +29,10 @@ public class AutenticacionService implements AutenticacionInterface{
     public Usuario registrarUsuario(String username, String password, String userRol) {
         // 1. verificar si ya existe
         if (usuarioRepository.findByUsername(username).isPresent()) {
-            throw new RuntimeException("El usuario ya existe");
+            throw new ResponseStatusException( //409 CONFLICT
+                    HttpStatus.CONFLICT,
+                    "El nombre de usuario ya existe"
+            );
         }
 
         //2. crear nuevo usuario
@@ -37,7 +42,10 @@ public class AutenticacionService implements AutenticacionInterface{
         usuario.setActivo(true);
         
         Rol rol = rolRepository.findByNombre(userRol)
-          .orElseThrow(() -> new RuntimeException("Rol no encontrado"));
+          .orElseThrow(() -> new ResponseStatusException( //404 NOT FOUND
+                    HttpStatus.NOT_FOUND,
+                    "Rol no encontrado"
+            ));
 
         usuario.setRol(rol);
 
@@ -50,16 +58,25 @@ public class AutenticacionService implements AutenticacionInterface{
 
         // 1. Buscar usuario
         Usuario usuario = usuarioRepository.findByUsername(request.getUsername())
-                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+                .orElseThrow(() -> new ResponseStatusException( //401 UNAUTHORIZED
+                HttpStatus.UNAUTHORIZED,
+                "Credenciales inválidas"
+                ));
 
         // 2. Verificar si está activo
         if (!usuario.isActivo()) {
-            throw new RuntimeException("Usuario deshabilitado");
+            throw new ResponseStatusException( //403 FORBIDDEN
+                    HttpStatus.FORBIDDEN,
+                    "Usuario deshabilitado"
+            );
         }
 
         // 3. Comparar contraseña (BCrypt)
         if (!passwordEncoder.matches(request.getPassword(), usuario.getPassword())) {
-            throw new RuntimeException("Contraseña incorrecta");
+            throw new ResponseStatusException( //401 UNAUTHORIZED
+                HttpStatus.UNAUTHORIZED,
+                "Credenciales inválidas"
+            );
         }
 
         // 4. Generar token

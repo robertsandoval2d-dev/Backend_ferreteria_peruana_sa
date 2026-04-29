@@ -1,5 +1,6 @@
 package com.ferreteriapsa.logistica.trabajador.controller;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,6 +20,6 @@ public class TrabajadorController {
     @PostMapping("/registrar")
     public ResponseEntity<TrabajadorDTO> registrarTrabajador(@RequestBody TrabajadorRequest request) {
         TrabajadorDTO nuevoTrabajador = trabajadorService.registrarTrabajadorCompleto(request);
-        return ResponseEntity.ok(nuevoTrabajador);
+        return ResponseEntity.status(HttpStatus.CREATED).body(nuevoTrabajador);
     }
 }

@@ -16,13 +16,6 @@ public class AutenticacionController {
         this.autenticacionService = autenticacionService;
     }
 
-    //regitrar usuario
-    // @PostMapping("/register")
-    // public ResponseEntity<UsuarioDTO> registrarUsuario(@RequestBody UsuarioRequest request) {
-    //     UsuarioDTO nuevoUsuario = autenticacionService.registrarUsuario(request);
-    //     return ResponseEntity.ok(nuevoUsuario);
-    // }
-
     //login
     @PostMapping("/login")
     public ResponseEntity<AuthResponse> login(@RequestBody UsuarioRequest request) {

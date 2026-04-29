@@ -1,6 +1,8 @@
 package com.ferreteriapsa.logistica.trabajador.service;
 
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
+import org.springframework.http.HttpStatus;
 
 import com.ferreteriapsa.logistica.auth.model.Usuario;
 import com.ferreteriapsa.logistica.auth.service.AutenticacionInterface;
@@ -41,9 +43,20 @@ public class TrabajadorService {
         trabajador.setDni(request.getDni());
         trabajador.setUsuario(usuario);
 
-        if(request.getIdTienda() != null){
+        if (!request.getRol().equalsIgnoreCase("admin")) {
+
+            if (request.getIdTienda() == null) {
+                throw new ResponseStatusException(  //400 BAD REQUEST
+                    HttpStatus.BAD_REQUEST,
+                    "Este rol requiere una tienda"
+                );
+            }
+
             Tienda tienda = tiendaRepository.findById(request.getIdTienda())
-                .orElseThrow(() -> new RuntimeException("Almacén no encontrado"));
+                .orElseThrow(() -> new ResponseStatusException( //404 NOT FOUND
+                    HttpStatus.NOT_FOUND,
+                    "Tienda no encontrada"
+                ));
 
             trabajador.setTienda(tienda);
         }
@@ -51,22 +64,29 @@ public class TrabajadorService {
         // 3. Obtener rol
         String rol = usuario.getRol().getNombre().toLowerCase();
 
+        trabajador = trabajadorRepository.save(trabajador);
+
         // 4. Asignación según rol
         switch (rol) {
 
             case "almacenero":
-                trabajador = trabajadorRepository.save(trabajador);
                 break;
 
             case "administrador_de_tienda":
-                trabajador = trabajadorRepository.save(trabajador);
                 break;
 
             case "jefe_de_linea":
-                trabajador = trabajadorRepository.save(trabajador);
-
+                if (request.getIdLinea() == null) {
+                    throw new ResponseStatusException(//400 BAD REQUEST
+                        HttpStatus.BAD_REQUEST,
+                        "Debe proporcionar idLinea para jefe de línea"
+                    );
+                }
                 LineaProducto linea = lineaRepository.findById(request.getIdLinea())
-                        .orElseThrow(() -> new RuntimeException("Línea no encontrada"));
+                        .orElseThrow(() -> new ResponseStatusException( //404 NOT FOUND
+                    HttpStatus.NOT_FOUND,
+                    "Línea no encontrada"
+                ));
 
                 linea.setJefeDeLinea(trabajador);
 
@@ -74,11 +94,13 @@ public class TrabajadorService {
                 break;
 
             case "admin":
-                trabajador = trabajadorRepository.save(trabajador);
                 break;
 
             default:
-                throw new RuntimeException("Rol no válido para asignación");
+                throw new ResponseStatusException( //409 CONFLICT
+                    HttpStatus.CONFLICT,
+                    "Rol no permitido"
+                );
         }
 
         return new TrabajadorDTO(trabajador.getNombre(), usuario.getUsername(), usuario.getRol().getNombre());

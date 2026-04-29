@@ -22,7 +22,7 @@ public class SecurityConfig {
 
             // 🔐 configuración de rutas
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/logistica/auth/login").permitAll() // público
+                .requestMatchers("/logistica/auth/login","/error").permitAll() // público
                 .requestMatchers("/logistica/trabajadores/registrar").hasRole("ADMIN")
                 .anyRequest().authenticated()         // protegido
             )
