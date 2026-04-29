@@ -7,6 +7,7 @@ import com.ferreteriapsa.logistica.auth.dto.request.UsuarioRequest;
 import com.ferreteriapsa.logistica.auth.dto.response.AuthResponse;
 import com.ferreteriapsa.logistica.auth.service.AutenticacionService;
 
+@CrossOrigin(origins = "http://localhost:4200") // ADDED
 @RestController
 @RequestMapping("/logistica/auth")
 public class AutenticacionController {
