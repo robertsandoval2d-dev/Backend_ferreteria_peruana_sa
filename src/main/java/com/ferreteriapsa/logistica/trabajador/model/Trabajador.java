@@ -9,7 +9,8 @@ public class Trabajador {
     // atributos    
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long trabajador_id;
+    @Column(name="trabajador_id")
+    private Long trabajadorId;
 
     @Column(nullable = false)
     private String nombre;
@@ -39,7 +40,7 @@ public class Trabajador {
     // getters y setters
 
     public Long getId() {
-        return trabajador_id;
+        return trabajadorId;
     }
 
     public String getNombre() {

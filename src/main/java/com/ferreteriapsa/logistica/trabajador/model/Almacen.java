@@ -8,7 +8,8 @@ public class Almacen {
     //atributos
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long almacen_id;
+    @Column(name="alamacen_id")
+    private Long almacenId;
 
     @Column(nullable = false)
     private String nombre;
@@ -30,7 +31,7 @@ public class Almacen {
     // getters y setters
 
     public Long getId() {
-        return almacen_id;
+        return almacenId;
     }
 
     public String getNombre() {

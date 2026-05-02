@@ -10,7 +10,8 @@ public class Usuario {
     // atributos
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long usuario_id;
+    @Column(name="usuario_id")
+    private Long usuarioId;
   
     @Column(nullable = false, unique = true)
     private String username;
@@ -35,10 +36,10 @@ public class Usuario {
 
     // getters y setters
     public Long getId() {
-        return usuario_id;
+        return usuarioId;
     }
-    public void setId(Long id) {
-        this.usuario_id = id;
+    public void setId(Long usuarioId) {
+        this.usuarioId = usuarioId;
     }
     public String getUsername() {
         return username;

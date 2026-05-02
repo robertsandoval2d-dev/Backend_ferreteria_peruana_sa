@@ -8,7 +8,8 @@ public class LineaProducto {
     //atributos
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long linea_producto_id;
+    @Column(name="linea_producto_id")
+    private Long lineaProductoId;
 
     @Column(nullable = false, unique = true)
     private String nombre;
@@ -34,7 +35,7 @@ public class LineaProducto {
     // getters y setters
 
     public Long getId() {
-        return linea_producto_id;
+        return lineaProductoId;
     }
 
     public String getNombre() {

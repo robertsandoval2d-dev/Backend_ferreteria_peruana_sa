@@ -9,7 +9,8 @@ public class Tienda {
     //atributos
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long tienda_id;
+    @Column(name="tienda_id")
+    private Long tiendaId;
 
     @Column(nullable = false)
     private String nombre;
@@ -40,7 +41,7 @@ public class Tienda {
     // getters y setters
 
     public Long getId() {
-        return tienda_id;
+        return tiendaId;
     }
 
     public String getNombre() {

@@ -8,7 +8,8 @@ public class Rol {
     //atributos
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long rol_id;
+    @Column(name="rol_id")
+    private Long rolId;
 
     @Column(nullable = false, unique = true)
     private String nombre;
@@ -19,10 +20,10 @@ public class Rol {
 
     //getters y setters
     public Long getId() {
-        return rol_id;
+        return rolId;
     }
-    public void setId(Long id) {
-        this.rol_id = id;
+    public void setId(Long rolId) {
+        this.rolId = rolId;
     }
     public String getNombre() {
         return nombre;
