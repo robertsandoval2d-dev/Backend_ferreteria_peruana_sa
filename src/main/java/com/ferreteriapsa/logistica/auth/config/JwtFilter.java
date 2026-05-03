@@ -47,7 +47,7 @@ public class JwtFilter extends OncePerRequestFilter {
             String rol = jwtService.extractRol(token);
 
             var authorities = List.of(
-                new SimpleGrantedAuthority("ROLE_" + rol)
+                new SimpleGrantedAuthority("ROLE_" + rol.toUpperCase()) //.toUpperCase mejora standar
             );
 
             CustomUserPrincipal principal = new CustomUserPrincipal(username, trabajadorId, rol);
