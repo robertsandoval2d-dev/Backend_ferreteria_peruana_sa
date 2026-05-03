@@ -8,7 +8,7 @@ public class Almacen {
     //atributos
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name="alamacen_id")
+    @Column(name="almacen_id")
     private Long almacenId;
 
     @Column(nullable = false)

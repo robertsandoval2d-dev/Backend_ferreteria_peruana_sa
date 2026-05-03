@@ -14,6 +14,6 @@ public interface InventarioRepository extends JpaRepository<Inventario, Long> {
             "p.productoId, p.nombre, i.stock, i.stockMin, CAST(i.rotacion AS string), p.categoria) " +
             "FROM Inventario i " +
             "JOIN i.producto p " +
-            "WHERE p.lineaProducto.jefeDeLinea.usuario.username = :username")
-    List<InventarioDTO> buscarProductosPorUsernameJefe(@Param("username") String username);
+            "WHERE p.lineaProducto.jefeDeLinea.trabajadorId = :trabajadorId")
+    List<InventarioDTO> buscarProductosPorJefeId(@Param("trabajadorId") Long trabajadorId);
 }

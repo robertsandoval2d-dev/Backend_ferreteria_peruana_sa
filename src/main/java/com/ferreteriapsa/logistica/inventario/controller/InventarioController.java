@@ -10,8 +10,6 @@ import org.springframework.web.bind.annotation.*;
 import com.ferreteriapsa.logistica.inventario.dto.response.InventarioDTO;
 import com.ferreteriapsa.logistica.inventario.service.InventarioService;
 
-
-
 @RestController
 @RequestMapping("/logistica/inventario")
 public class InventarioController {

@@ -1,6 +1,5 @@
 package com.ferreteriapsa.logistica.inventario.model;
 
-
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
@@ -44,3 +43,4 @@ public class Inventario {
 enum Rotacion {
     BAJA, MEDIA, ALTA
 }
+
