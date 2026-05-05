@@ -4,7 +4,6 @@ import com.ferreteriapsa.logistica.planificacion.repository.*;
 import com.ferreteriapsa.logistica.planificacion.dto.request.*;
 import com.ferreteriapsa.logistica.planificacion.dto.response.*;
 import com.ferreteriapsa.logistica.planificacion.model.*;
-import com.ferreteriapsa.logistica.auth.config.CustomUserPrincipal;
 import com.ferreteriapsa.logistica.catalogo.model.Producto;
 import com.ferreteriapsa.logistica.catalogo.model.Proveedor;
 import com.ferreteriapsa.logistica.catalogo.repository.ProductoRepository;
@@ -12,7 +11,6 @@ import com.ferreteriapsa.logistica.catalogo.repository.ProveedorRepository;
 import com.ferreteriapsa.logistica.trabajador.model.Trabajador;
 import com.ferreteriapsa.logistica.trabajador.repository.TrabajadorRepository;
 
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -39,11 +37,7 @@ public class PlanificacionService {
     }
 
     @Transactional
-    public CronogramaResponse generarCronograma(List<DetalleCronogramaRequest> detallesCronograma){
-        var authentication = SecurityContextHolder.getContext().getAuthentication();
-        CustomUserPrincipal customUserPrincipal = (CustomUserPrincipal) authentication.getPrincipal();
-        // Pedimos el ID del trabajador
-        Long trabajadorId = customUserPrincipal.getTrabajadorId();
+    public CronogramaResponse generarCronograma(Long trabajadorId, List<DetalleCronogramaRequest> detallesCronograma){
 
         // Crear cronograma
         Cronograma cronograma = new Cronograma();

@@ -5,8 +5,10 @@ import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import com.ferreteriapsa.logistica.auth.config.CustomUserPrincipal;
 import com.ferreteriapsa.logistica.inventario.dto.response.InventarioDTO;
 import com.ferreteriapsa.logistica.inventario.service.InventarioService;
 
@@ -20,8 +22,12 @@ public class InventarioController {
     }
     @PreAuthorize("hasRole('JEFE_DE_LINEA')")
     @GetMapping("/productosLinea")
-    public ResponseEntity<List<InventarioDTO>> listarLineaProducto() {
-        List<InventarioDTO> listaProductos = inventarioService.listarInventarioLinea();
+    public ResponseEntity<List<InventarioDTO>> listarLineaProducto(
+            @AuthenticationPrincipal CustomUserPrincipal principal) {
+
+        Long trabajadorId = principal.getTrabajadorId();
+
+        List<InventarioDTO> listaProductos = inventarioService.listarInventarioLinea(trabajadorId);
         return new ResponseEntity<>(listaProductos, HttpStatus.OK);
     }
 
