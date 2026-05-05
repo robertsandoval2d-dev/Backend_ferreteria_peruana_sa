@@ -1,7 +1,6 @@
 package com.ferreteriapsa.logistica.catalogo.model;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
 
 import com.ferreteriapsa.logistica.trabajador.model.LineaProducto;
 
@@ -14,15 +13,12 @@ public class Producto {
     @Column(name = "producto_id")
     private Long productoId;
 
-    @NotBlank
     @Column(nullable = false)
     private String nombre;
 
-    @NotBlank
     @Column(nullable = false)
     private String descripcion;
 
-    @NotBlank
     @Column(nullable = false)
     private String categoria;
 
