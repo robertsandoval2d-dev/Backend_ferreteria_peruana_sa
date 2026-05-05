@@ -4,10 +4,11 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 
+import com.ferreteriapsa.logistica.catalogo.model.Producto;
 import com.ferreteriapsa.logistica.trabajador.model.Almacen;
 
 @Entity
-@Table(name = "inventario")
+@Table(name = "inventarios")
 public class Inventario {
     //atributos
     @Id

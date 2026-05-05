@@ -1,4 +1,4 @@
-package com.ferreteriapsa.logistica.inventario.model;
+package com.ferreteriapsa.logistica.catalogo.model;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
@@ -6,7 +6,7 @@ import jakarta.validation.constraints.NotBlank;
 import com.ferreteriapsa.logistica.trabajador.model.LineaProducto;
 
 @Entity
-@Table(name = "producto")
+@Table(name = "productos")
 public class Producto {
     //atributos
     @Id
@@ -34,7 +34,7 @@ public class Producto {
 
     public Producto() {}
 
-    public Producto(String nombre, String descripcion, Integer stock, Rotacion rotacion, String categoria) {
+    public Producto(String nombre, String descripcion, String categoria) {
         this.nombre = nombre;
         this.descripcion = descripcion;
         this.categoria = categoria;
