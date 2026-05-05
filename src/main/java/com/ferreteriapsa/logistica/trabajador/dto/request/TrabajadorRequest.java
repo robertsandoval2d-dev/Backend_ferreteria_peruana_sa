@@ -11,8 +11,8 @@ public class TrabajadorRequest {
     private String rol;
 
     // asignación
-    private Long idTienda;
-    private Long idLinea;
+    private Long tiendaId;
+    private Long lineaId;
 
     public TrabajadorRequest() {
     }
@@ -37,12 +37,12 @@ public class TrabajadorRequest {
         return rol;
     }
 
-    public Long getIdTienda() {
-        return idTienda;
+    public Long getTiendaId() {
+        return tiendaId;
     }
 
-    public Long getIdLinea() {
-        return idLinea;
+    public Long getLineaId() {
+        return lineaId;
     }
 
 }

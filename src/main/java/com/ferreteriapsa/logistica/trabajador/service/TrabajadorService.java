@@ -45,14 +45,14 @@ public class TrabajadorService {
 
         if (!request.getRol().equalsIgnoreCase("admin")) {
 
-            if (request.getIdTienda() == null) {
+            if (request.getTiendaId() == null) {
                 throw new ResponseStatusException(  //400 BAD REQUEST
                     HttpStatus.BAD_REQUEST,
                     "Este rol requiere una tienda"
                 );
             }
 
-            Tienda tienda = tiendaRepository.findById(request.getIdTienda())
+            Tienda tienda = tiendaRepository.findById(request.getTiendaId())
                 .orElseThrow(() -> new ResponseStatusException( //404 NOT FOUND
                     HttpStatus.NOT_FOUND,
                     "Tienda no encontrada"
@@ -76,13 +76,13 @@ public class TrabajadorService {
                 break;
 
             case "jefe_de_linea":
-                if (request.getIdLinea() == null) {
+                if (request.getLineaId() == null) {
                     throw new ResponseStatusException(//400 BAD REQUEST
                         HttpStatus.BAD_REQUEST,
                         "Debe proporcionar idLinea para jefe de línea"
                     );
                 }
-                LineaProducto linea = lineaRepository.findById(request.getIdLinea())
+                LineaProducto linea = lineaRepository.findById(request.getLineaId())
                         .orElseThrow(() -> new ResponseStatusException( //404 NOT FOUND
                     HttpStatus.NOT_FOUND,
                     "Línea no encontrada"

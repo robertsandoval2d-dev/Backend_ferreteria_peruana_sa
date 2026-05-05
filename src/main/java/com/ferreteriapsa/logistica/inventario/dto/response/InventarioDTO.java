@@ -1,7 +1,7 @@
 package com.ferreteriapsa.logistica.inventario.dto.response;
 
 public class InventarioDTO {
-    private Long id;
+    private Long productoId;
     private String nombre;
     private Integer stockActual;
     private Integer stockMinimo;
@@ -10,8 +10,8 @@ public class InventarioDTO {
 
     public InventarioDTO() {}
 
-    public InventarioDTO(Long id, String nombre, Integer stockActual, Integer stockMinimo, String rotacion, String categoria) {
-        this.id = id;
+    public InventarioDTO(Long productoId, String nombre, Integer stockActual, Integer stockMinimo, String rotacion, String categoria) {
+        this.productoId = productoId;
         this.nombre = nombre;
         this.stockActual = stockActual;
         this.stockMinimo = stockMinimo;
@@ -19,8 +19,8 @@ public class InventarioDTO {
         this.categoria = categoria;
     }
 
-    public Long getId() {
-        return id;
+    public Long getProductoId() {
+        return productoId;
     }
 
     public String getNombre() {
