@@ -1,7 +1,6 @@
 package com.ferreteriapsa.logistica.catalogo.model;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
 
 @Entity
 @Table(name = "proveedores")
@@ -12,14 +11,12 @@ public class Proveedor {
     @Column(name = "proveedor_id")
     private Long proveedorId;
 
-    @NotBlank
     @Column(nullable = false)
     private String nombre;
 
     @Column(name="mail_contacto", nullable = true)
     private String mailContacto;
 
-    @NotBlank
     @Column(nullable = false)
     private String telefono;
 

@@ -2,8 +2,7 @@ package com.ferreteriapsa.logistica.planificacion.model;
 
 import java.time.LocalDate;
 
-import com.ferreteriapsa.logistica.catalogo.model.Producto;
-import com.ferreteriapsa.logistica.catalogo.model.Proveedor;
+import com.ferreteriapsa.logistica.catalogo.model.ProductoProveedor;
 
 import jakarta.persistence.*;
 
@@ -27,12 +26,8 @@ public class DetalleCronograma {
     private Cronograma cronograma;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "producto_id", nullable = false)
-    private Producto producto;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "proveedor_id", nullable = false)
-    private Proveedor proveedor;
+    @JoinColumn(name = "producto_proveedor_id", nullable = false)
+    private ProductoProveedor productoProveedor;
 
     // constructores
     public DetalleCronograma(){}
@@ -67,20 +62,12 @@ public class DetalleCronograma {
         this.fechaRequerida = fechaRequerida;
     }
 
-    public Producto getProducto() {
-        return producto;
+    public ProductoProveedor getProductoProducto() {
+        return productoProveedor;
     }
 
-    public void setProducto(Producto producto) {
-        this.producto = producto;
-    }
-
-    public Proveedor getProveedor() {
-        return proveedor;
-    }
-
-    public void setProveedor(Proveedor proveedor) {
-        this.proveedor = proveedor;
+    public void setProductoProveedor(ProductoProveedor productoProveedor) {
+        this.productoProveedor = productoProveedor;
     }
 
     public Cronograma getCronograma(){

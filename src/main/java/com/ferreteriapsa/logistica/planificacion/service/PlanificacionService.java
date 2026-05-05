@@ -4,15 +4,15 @@ import com.ferreteriapsa.logistica.planificacion.repository.*;
 import com.ferreteriapsa.logistica.planificacion.dto.request.*;
 import com.ferreteriapsa.logistica.planificacion.dto.response.*;
 import com.ferreteriapsa.logistica.planificacion.model.*;
-import com.ferreteriapsa.logistica.catalogo.model.Producto;
-import com.ferreteriapsa.logistica.catalogo.model.Proveedor;
-import com.ferreteriapsa.logistica.catalogo.repository.ProductoRepository;
-import com.ferreteriapsa.logistica.catalogo.repository.ProveedorRepository;
+import com.ferreteriapsa.logistica.catalogo.model.ProductoProveedor;
+import com.ferreteriapsa.logistica.catalogo.repository.ProductoProveedorRepository;
 import com.ferreteriapsa.logistica.trabajador.model.Trabajador;
 import com.ferreteriapsa.logistica.trabajador.repository.TrabajadorRepository;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
+import org.springframework.http.HttpStatus;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -24,16 +24,14 @@ public class PlanificacionService {
     private final CronogramaRepository cronogramaRepository;
     private final DetalleCronogramaRepository detalleCronogramaRepository;
     private final TrabajadorRepository trabajadorRepository;
-    private final ProductoRepository productoRepository;
-    private final ProveedorRepository proveedorRepository;
+    private final ProductoProveedorRepository productoProveedorRepository;
 
     public PlanificacionService(CronogramaRepository cronogramaRepository,DetalleCronogramaRepository detalleCronogramaRepository, 
-        TrabajadorRepository trabajadorRepository, ProductoRepository productoRepository, ProveedorRepository proveedorRepository){
+        TrabajadorRepository trabajadorRepository, ProductoProveedorRepository productoProveedorRepository){
             this.cronogramaRepository = cronogramaRepository;
             this.detalleCronogramaRepository = detalleCronogramaRepository;
             this.trabajadorRepository = trabajadorRepository;
-            this.productoRepository = productoRepository;
-            this.proveedorRepository = proveedorRepository;
+            this.productoProveedorRepository = productoProveedorRepository;
     }
 
     @Transactional
@@ -61,16 +59,18 @@ public class PlanificacionService {
             detalle.setCantidad(req.getCantidad());
             detalle.setFechaRequerida(req.getFechaRequerida());
 
-            // referenciar producto
-            @SuppressWarnings("null")
-            Producto producto = productoRepository.getReferenceById(req.getProductoId());
-            detalle.setProducto(producto);
+            // referenciar productoProveedor
+            ProductoProveedor pp = productoProveedorRepository
+            .findByProducto_ProductoIdAndProveedor_ProveedorId(
+                req.getProductoId(),
+                req.getProveedorId()
+            )
+            .orElseThrow(() -> new ResponseStatusException( //400 BAD REQUEST
+                    HttpStatus.BAD_REQUEST,
+                    "Relación no válida"
+                ));
 
-            // referenciar proveedor
-            @SuppressWarnings("null")
-            Proveedor proveedor = proveedorRepository.getReferenceById(req.getProveedorId());
-            detalle.setProveedor(proveedor);
-
+            detalle.setProductoProveedor(pp);
             detalle.setCronograma(cronograma);
 
             lista.add(detalle);
