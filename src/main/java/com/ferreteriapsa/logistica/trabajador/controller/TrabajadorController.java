@@ -5,7 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import com.ferreteriapsa.logistica.trabajador.dto.request.TrabajadorRequest;
-import com.ferreteriapsa.logistica.trabajador.dto.response.TrabajadorDTO;
+import com.ferreteriapsa.logistica.trabajador.dto.response.TrabajadorResponse;
 import com.ferreteriapsa.logistica.trabajador.service.TrabajadorService;
 
 @RestController
@@ -18,8 +18,8 @@ public class TrabajadorController {
     }
 
     @PostMapping("/registrar")
-    public ResponseEntity<TrabajadorDTO> registrarTrabajador(@RequestBody TrabajadorRequest request) {
-        TrabajadorDTO nuevoTrabajador = trabajadorService.registrarTrabajadorCompleto(request);
+    public ResponseEntity<TrabajadorResponse> registrarTrabajador(@RequestBody TrabajadorRequest request) {
+        TrabajadorResponse nuevoTrabajador = trabajadorService.registrarTrabajadorCompleto(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(nuevoTrabajador);
     }
 }

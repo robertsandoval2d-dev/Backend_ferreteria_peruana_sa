@@ -7,7 +7,7 @@ import org.springframework.http.HttpStatus;
 import com.ferreteriapsa.logistica.auth.model.Usuario;
 import com.ferreteriapsa.logistica.auth.service.AutenticacionInterface;
 import com.ferreteriapsa.logistica.trabajador.dto.request.TrabajadorRequest;
-import com.ferreteriapsa.logistica.trabajador.dto.response.TrabajadorDTO;
+import com.ferreteriapsa.logistica.trabajador.dto.response.TrabajadorResponse;
 import com.ferreteriapsa.logistica.trabajador.model.*;  
 import com.ferreteriapsa.logistica.trabajador.repository.*;
 
@@ -32,7 +32,7 @@ public class TrabajadorService {
 
     @SuppressWarnings("null")
     @Transactional
-    public TrabajadorDTO registrarTrabajadorCompleto(TrabajadorRequest request) {
+    public TrabajadorResponse registrarTrabajadorCompleto(TrabajadorRequest request) {
 
         // 1. Crear usuario
         Usuario usuario = autenticacionService.registrarUsuario(request.getUsername(), request.getPassword(), request.getRol());
@@ -103,6 +103,6 @@ public class TrabajadorService {
                 );
         }
 
-        return new TrabajadorDTO(trabajador.getNombre(), usuario.getUsername(), usuario.getRol().getNombre());
+        return new TrabajadorResponse(trabajador.getNombre(), usuario.getUsername(), usuario.getRol().getNombre());
     }
 }

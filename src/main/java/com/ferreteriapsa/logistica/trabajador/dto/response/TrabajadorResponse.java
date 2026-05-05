@@ -1,13 +1,13 @@
 package com.ferreteriapsa.logistica.trabajador.dto.response;
 
-public class TrabajadorDTO {
+public class TrabajadorResponse {
     private String nombre;
     private String username;
     private String rol;
 
-    public TrabajadorDTO() {
+    public TrabajadorResponse() {
     }
-    public TrabajadorDTO(String nombre, String username, String rol) {
+    public TrabajadorResponse(String nombre, String username, String rol) {
         this.nombre = nombre;
         this.username = username;
         this.rol = rol;
