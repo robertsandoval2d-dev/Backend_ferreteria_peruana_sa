@@ -20,16 +20,6 @@ public class JwtService {
         return Keys.hmacShaKeyFor(SECRET.getBytes());
     }
 
-    // public String generateToken(Usuario usuario) {
-    //     return Jwts.builder()
-    //             .setSubject(usuario.getUsername())
-    //             .claim("rol", usuario.getRol().getNombre())
-    //             .claim("trabajadorId",usuario.getTrabajador().getId())
-    //             .setIssuedAt(new Date())
-    //             .setExpiration(new Date(System.currentTimeMillis() + 86400000)) // 1 día
-    //             .signWith(getKey())
-    //             .compact();
-    // }
     public String generateToken(Usuario usuario) {
         JwtBuilder builder = Jwts.builder()
                 .setSubject(usuario.getUsername())
@@ -40,6 +30,7 @@ public class JwtService {
 
         if (usuario.getTrabajador() != null) {
             builder.claim("trabajadorId", usuario.getTrabajador().getId());
+            builder.claim("nombre", usuario.getTrabajador().getNombre());
         }
 
         return builder.compact();
