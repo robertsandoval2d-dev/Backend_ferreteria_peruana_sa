@@ -11,7 +11,7 @@ public class LineaProducto {
     @Column(name="linea_producto_id")
     private Long lineaProductoId;
 
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false, unique = false)
     private String nombre;
 
     private String descripcion;

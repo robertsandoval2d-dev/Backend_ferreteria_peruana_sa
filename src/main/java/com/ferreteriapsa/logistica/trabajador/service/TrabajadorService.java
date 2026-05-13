@@ -7,11 +7,17 @@ import org.springframework.http.HttpStatus;
 import com.ferreteriapsa.logistica.auth.model.Usuario;
 import com.ferreteriapsa.logistica.auth.service.AutenticacionInterface;
 import com.ferreteriapsa.logistica.trabajador.dto.request.TrabajadorRequest;
+import com.ferreteriapsa.logistica.trabajador.dto.request.TrabajadorUpdateRequest;
+import com.ferreteriapsa.logistica.trabajador.dto.response.LineaProductoResponse;
+import com.ferreteriapsa.logistica.trabajador.dto.response.TiendaResponse;
 import com.ferreteriapsa.logistica.trabajador.dto.response.TrabajadorResponse;
+import com.ferreteriapsa.logistica.trabajador.dto.response.TrabajadorUpdateResponse;
 import com.ferreteriapsa.logistica.trabajador.model.*;  
 import com.ferreteriapsa.logistica.trabajador.repository.*;
 
 import jakarta.transaction.Transactional;
+
+import java.util.List;
 
 
 @Service
@@ -103,6 +109,75 @@ public class TrabajadorService {
                 );
         }
 
-        return new TrabajadorResponse(trabajador.getNombre(), usuario.getUsername(), usuario.getRol().getNombre());
+        return new TrabajadorResponse(trabajador.getId(), usuario.getRol().getNombre(), usuario.getUsername(),
+            trabajador.getNombre(),trabajador.getDni());
+    }
+
+    public List<TrabajadorResponse> listarTrabajadores(){
+        return trabajadorRepository.listarTrabajadores();
+    }
+
+    @SuppressWarnings("null")
+    @Transactional
+    public TrabajadorUpdateResponse actualizarTrabajador(TrabajadorUpdateRequest request, Long trabajadorId){
+        Trabajador trabajador = trabajadorRepository.findById(trabajadorId)
+            .orElseThrow(() -> new ResponseStatusException( //404 NOT FOUND
+                    HttpStatus.NOT_FOUND,
+                    "Trabajador no encontrado"
+            ));
+
+        trabajador.setNombre(request.getNombre());
+        trabajador.setDni(request.getDni());
+
+        Tienda tienda = tiendaRepository.findById(request.getTiendaId())
+            .orElseThrow(() -> new ResponseStatusException( //404 NOT FOUND
+                    HttpStatus.NOT_FOUND,
+                    "Tienda no encontrada"
+            ));
+
+        trabajador.setTienda(tienda);
+
+        trabajador = trabajadorRepository.save(trabajador);
+
+        TrabajadorUpdateResponse trabajadorUpdateResponse = new TrabajadorUpdateResponse();
+        
+        if(request.getLineaId() != null){
+            LineaProducto lineaProducto = lineaRepository.findById(request.getLineaId())
+                .orElseThrow(() -> new ResponseStatusException( //404 NOT FOUND
+                    HttpStatus.NOT_FOUND,
+                    "Línea no encontrada"
+                ));
+            lineaProducto.setJefeDeLinea(trabajador);
+
+            lineaProducto = lineaRepository.save(lineaProducto);
+            trabajadorUpdateResponse.setNombreLinea(lineaProducto.getNombre());
+        }
+
+        trabajadorUpdateResponse.setTrabajadorId(trabajador.getId());
+        trabajadorUpdateResponse.setNombre(trabajador.getNombre());
+        trabajadorUpdateResponse.setDni(trabajador.getDni());
+        trabajadorUpdateResponse.setNombreTienda(tienda.getNombre());
+
+        return trabajadorUpdateResponse;
+    }
+
+    public List<TiendaResponse> listarTiendasConLineas(){
+        List<Tienda> tiendas = tiendaRepository.listarTiendasConLineas();
+
+        List<TiendaResponse> listaTiendas = tiendas.stream()
+            .map(tienda -> new TiendaResponse(
+                    tienda.getId(),
+                    tienda.getNombre(),
+
+                    tienda.getLineaProductos().stream()
+                        .map(lp -> new LineaProductoResponse(
+                                lp.getId(),
+                                lp.getNombre()
+                        ))
+                        .toList()
+            ))
+            .toList();
+
+        return listaTiendas;
     }
 }

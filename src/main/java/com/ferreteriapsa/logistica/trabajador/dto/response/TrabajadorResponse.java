@@ -1,18 +1,28 @@
 package com.ferreteriapsa.logistica.trabajador.dto.response;
 
 public class TrabajadorResponse {
-    private String nombre;
-    private String username;
+    private Long trabajadorId;
     private String rol;
+    private String username;
+    private String nombre;
+    private String dni;
 
     public TrabajadorResponse() {
     }
-    public TrabajadorResponse(String nombre, String username, String rol) {
-        this.nombre = nombre;
-        this.username = username;
+    public TrabajadorResponse(Long trabajadorId,String rol, String username, String nombre, String dni) {
+        this.trabajadorId = trabajadorId;
         this.rol = rol;
+        this.username = username;
+        this.nombre = nombre;
+        this.dni = dni;
     }
 
+    public Long getTrabajadorId(){
+        return trabajadorId;
+    }
+    public void setTrabajadorId(Long trabajadorId){
+        this.trabajadorId = trabajadorId;
+    }
     public String getNombre() {
         return nombre;
     }
@@ -30,5 +40,11 @@ public class TrabajadorResponse {
     }
     public void setRol(String rol) {
         this.rol = rol;
+    }
+    public String getDni(){
+        return dni;
+    }
+    public void setDni(String dni){
+        this.dni = dni;
     }
 }

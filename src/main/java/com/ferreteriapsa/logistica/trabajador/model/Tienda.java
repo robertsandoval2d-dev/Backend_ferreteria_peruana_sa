@@ -27,6 +27,7 @@ public class Tienda {
     private List<Trabajador> trabajadores;
 
     @OneToMany(mappedBy = "tienda")
+    @OrderBy("nombre ASC")
     private List<LineaProducto> lineaProductos;
 
     // constructores
