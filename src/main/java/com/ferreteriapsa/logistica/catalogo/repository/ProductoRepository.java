@@ -15,11 +15,13 @@ public interface ProductoRepository extends JpaRepository<Producto, Long> {
             p.nombre as productoNombre,
             pr.proveedor_id as proveedorId,
             pr.nombre as proveedorNombre
-        FROM lineas_producto l
+        FROM asignaciones a
+        JOIN lineas_producto l ON a.linea_producto_id = l.linea_producto_id
         JOIN productos p ON p.linea_producto_id = l.linea_producto_id
         LEFT JOIN productos_proveedores pp ON pp.producto_id = p.producto_id
         LEFT JOIN proveedores pr ON pr.proveedor_id = pp.proveedor_id
-        WHERE l.jefe_de_linea_id = :trabajadorId
+        WHERE a.trabajador_id = :trabajadorId
+        AND a.activo = true
         ORDER BY p.producto_id, pr.proveedor_id
     """, nativeQuery = true)
     List<CatalogoProjection> obtenerCatalogoPorTrabajador(

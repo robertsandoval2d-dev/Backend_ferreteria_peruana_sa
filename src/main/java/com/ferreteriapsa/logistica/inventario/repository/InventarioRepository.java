@@ -10,10 +10,24 @@ import java.util.List;
 
 @Repository
 public interface InventarioRepository extends JpaRepository<Inventario, Long> {
-    // @Query("SELECT new com.ferreteriapsa.logistica.inventario.dto.response.InventarioDTO(" +
-    //         "p.productoId, p.nombre, i.stock, i.stockMin, CAST(i.rotacion AS string), p.categoria) " +
-    //         "FROM Inventario i " +
-    //         "JOIN i.producto p " +
-    //         "WHERE p.lineaProducto.jefeDeLinea.trabajadorId = :trabajadorId")
-    // List<InventarioDTO> buscarProductosPorJefeId(@Param("trabajadorId") Long trabajadorId);
+@Query("""
+    SELECT new com.ferreteriapsa.logistica.inventario.dto.response.InventarioDTO(
+        p.productoId, 
+        p.nombre, 
+        i.stock, 
+        i.stockMin, 
+        CAST(i.rotacion AS string), 
+        p.categoria
+    )
+    FROM Inventario i
+    JOIN i.producto p
+    JOIN p.lineaProducto lp
+    WHERE lp.lineaProductoId IN (
+        SELECT a.lineaProducto.lineaProductoId
+        FROM Asignacion a
+        WHERE a.trabajador.trabajadorId = :trabajadorId
+          AND a.activo = true
+    )
+""")
+List<InventarioDTO> buscarProductosPorJefeId(@Param("trabajadorId") Long trabajadorId);
 }

@@ -16,9 +16,9 @@ public class InventarioService {
     public InventarioService(InventarioRepository inventarioRepository) {
         this.inventarioRepository = inventarioRepository;
     }
-    // @Transactional(readOnly = true)
-    // public List<InventarioDTO> listarInventarioLinea(Long trabajadorId){
+    @Transactional(readOnly = true)
+    public List<InventarioDTO> listarInventarioLinea(Long trabajadorId){
 
-    //     return inventarioRepository.buscarProductosPorJefeId(trabajadorId);
-    // }
+        return inventarioRepository.buscarProductosPorJefeId(trabajadorId);
+    }
 }

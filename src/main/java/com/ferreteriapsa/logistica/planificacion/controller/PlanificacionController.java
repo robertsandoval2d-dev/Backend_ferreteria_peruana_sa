@@ -35,13 +35,13 @@ public class PlanificacionController {
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
-    // @PreAuthorize("hasRole('ADMINISTRADOR_DE_TIENDA')")
-    // @GetMapping("/cronogramas")
-    // public ResponseEntity<List<ListaCronogramasResponse>> listarCronogramasPendientesPorTrabajador(
-    //         @AuthenticationPrincipal CustomUserPrincipal principal){
+    @PreAuthorize("hasRole('ADMINISTRADOR_DE_TIENDA')")
+    @GetMapping("/cronogramas")
+    public ResponseEntity<List<ListaCronogramasResponse>> listarCronogramasPendientesPorTrabajador(
+            @AuthenticationPrincipal CustomUserPrincipal principal){
 
-    //     Long trabajadorId = principal.getTrabajadorId();
-    //     List<ListaCronogramasResponse> listaCronogramas = planificacionService.listarCronogramasPendientesPorTrabajador(trabajadorId);
-    //     return new ResponseEntity<>(listaCronogramas,HttpStatus.OK);
-    // }
+        Long trabajadorId = principal.getTrabajadorId();
+        List<ListaCronogramasResponse> listaCronogramas = planificacionService.listarCronogramasPendientesPorTrabajador(trabajadorId);
+        return new ResponseEntity<>(listaCronogramas,HttpStatus.OK);
+    }
 }

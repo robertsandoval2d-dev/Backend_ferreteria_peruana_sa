@@ -6,6 +6,7 @@ import com.ferreteriapsa.logistica.planificacion.dto.response.*;
 import com.ferreteriapsa.logistica.planificacion.model.*;
 import com.ferreteriapsa.logistica.catalogo.model.ProductoProveedor;
 import com.ferreteriapsa.logistica.catalogo.repository.ProductoProveedorRepository;
+import com.ferreteriapsa.logistica.trabajador.model.Asignacion;
 import com.ferreteriapsa.logistica.trabajador.model.Tienda;
 import com.ferreteriapsa.logistica.trabajador.model.Trabajador;
 import com.ferreteriapsa.logistica.trabajador.repository.TrabajadorRepository;
@@ -55,6 +56,12 @@ public class PlanificacionService {
         //referenciar la tienda
         // Tienda tienda = trabajador.getTienda();
         // cronograma.setTienda(tienda);
+        Tienda tienda = trabajador.getAsignaciones().stream()
+        .filter(Asignacion::isActivo)
+        .map(Asignacion::getTienda)
+        .findFirst()
+        .orElseThrow(null);
+        cronograma.setTienda(tienda);
         
         // Guardar cronograma primero
         cronograma = cronogramaRepository.save(cronograma);
@@ -95,43 +102,43 @@ public class PlanificacionService {
         return response;
     }
 
-//     public List<ListaCronogramasResponse> listarCronogramasPendientesPorTrabajador(Long trabajadorId){
+    public List<ListaCronogramasResponse> listarCronogramasPendientesPorTrabajador(Long trabajadorId){
 
-//         List<Cronograma> cronogramas =
-//                 cronogramaRepository
-//                         .listarCronogramasPendientesPorTrabajador(trabajadorId);
+        List<Cronograma> cronogramas =
+                cronogramaRepository
+                        .listarCronogramasPendientesPorTrabajador(trabajadorId);
 
-//         return cronogramas.stream()
-//                 .map(c -> new ListaCronogramasResponse(
+        return cronogramas.stream()
+                .map(c -> new ListaCronogramasResponse(
 
-//                         c.getCronogramaId(),
-//                         c.getDetallesCronograma()
-//                                 .get(0)
-//                                 .getProductoProveedor()
-//                                 .getProducto()
-//                                 .getLineaProducto()
-//                                 .getNombre(),
+                        c.getCronogramaId(),
+                        c.getDetallesCronograma()
+                                .get(0)
+                                .getProductoProveedor()
+                                .getProducto()
+                                .getLineaProducto()
+                                .getNombre(),
 
-//                         c.getDetallesCronograma()
-//                                 .stream()
-//                                 .map(dc -> new DetalleCronogramaDTO(
+                        c.getDetallesCronograma()
+                                .stream()
+                                .map(dc -> new DetalleCronogramaDTO(
 
-//                                         dc.getProductoProveedor()
-//                                                 .getProveedor()
-//                                                 .getNombre(),
+                                        dc.getProductoProveedor()
+                                                .getProveedor()
+                                                .getNombre(),
 
-//                                         dc.getProductoProveedor()
-//                                                 .getProducto()
-//                                                 .getNombre(),
+                                        dc.getProductoProveedor()
+                                                .getProducto()
+                                                .getNombre(),
 
-//                                         dc.getCantidad(),
+                                        dc.getCantidad(),
 
-//                                         dc.getFechaRequerida()
+                                        dc.getFechaRequerida()
 
-//                                 ))
-//                                 .toList()
+                                ))
+                                .toList()
 
-//                 ))
-//                 .toList();
-//     }
+                ))
+                .toList();
+    }
 }
