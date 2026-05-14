@@ -50,7 +50,7 @@ public class SecurityConfig {
         // Permite tu Frontend
         configuration.setAllowedOrigins(Arrays.asList("http://localhost:4200")); 
         // Permite los métodos que usa Angular
-        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
         // Permite las cabeceras estándar y el envío del Token
         configuration.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type"));
         configuration.setAllowCredentials(true);

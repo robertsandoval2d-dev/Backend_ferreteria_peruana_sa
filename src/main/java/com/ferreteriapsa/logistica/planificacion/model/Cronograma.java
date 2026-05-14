@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import com.ferreteriapsa.logistica.trabajador.model.Tienda;
 import com.ferreteriapsa.logistica.trabajador.model.Trabajador;
 
 @Entity
@@ -25,6 +26,10 @@ public class Cronograma {
     @ManyToOne
     @JoinColumn(name = "trabajador_id")
     private Trabajador trabajador;
+
+    @ManyToOne
+    @JoinColumn(name = "tienda_id")
+    private Tienda tienda;
 
     @OneToMany(mappedBy = "cronograma")
     private List<DetalleCronograma> detallesCronograma;
@@ -68,5 +73,13 @@ public class Cronograma {
 
     public void setTrabajador(Trabajador trabajador) {
         this.trabajador = trabajador;
+    }
+
+    public Tienda getTienda(){
+        return tienda;
+    } 
+
+    public void setTienda(Tienda tienda){
+        this.tienda = tienda;
     }
 }

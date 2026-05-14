@@ -23,7 +23,7 @@ public class CatalogoController {
     }
 
     @PreAuthorize("hasRole('JEFE_DE_LINEA')")
-    @GetMapping("/productosLinea")
+    @GetMapping("/productos-linea")
     public ResponseEntity<List<CatalogoResponse>> listarCatalogoLinea(
             @AuthenticationPrincipal CustomUserPrincipal principal) {
 

@@ -6,6 +6,7 @@ import com.ferreteriapsa.logistica.planificacion.dto.response.*;
 import com.ferreteriapsa.logistica.planificacion.model.*;
 import com.ferreteriapsa.logistica.catalogo.model.ProductoProveedor;
 import com.ferreteriapsa.logistica.catalogo.repository.ProductoProveedorRepository;
+import com.ferreteriapsa.logistica.trabajador.model.Tienda;
 import com.ferreteriapsa.logistica.trabajador.model.Trabajador;
 import com.ferreteriapsa.logistica.trabajador.repository.TrabajadorRepository;
 
@@ -44,8 +45,16 @@ public class PlanificacionService {
 
         // Referenciar el trabajador
         @SuppressWarnings("null")
-        Trabajador trabajador = trabajadorRepository.getReferenceById(trabajadorId);
+        Trabajador trabajador = trabajadorRepository.findById(trabajadorId)
+            .orElseThrow(() -> new ResponseStatusException( //404 NOT FOUND
+                    HttpStatus.NOT_FOUND,
+                    "Trabajador no encontrado"
+                ));
         cronograma.setTrabajador(trabajador);
+
+        //referenciar la tienda
+        Tienda tienda = trabajador.getTienda();
+        cronograma.setTienda(tienda);
         
         // Guardar cronograma primero
         cronograma = cronogramaRepository.save(cronograma);

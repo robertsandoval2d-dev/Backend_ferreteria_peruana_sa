@@ -3,6 +3,8 @@ package com.ferreteriapsa.logistica.trabajador.model;
 import jakarta.persistence.*;
 import java.util.List;
 
+import com.ferreteriapsa.logistica.planificacion.model.Cronograma;
+
 @Entity
 @Table(name = "tiendas")
 public class Tienda {
@@ -25,6 +27,9 @@ public class Tienda {
 
     @OneToMany(mappedBy = "tienda")
     private List<Trabajador> trabajadores;
+
+    @OneToMany(mappedBy = "tienda")
+    private List<Cronograma> cronogramas;
 
     @OneToMany(mappedBy = "tienda")
     @OrderBy("nombre ASC")
@@ -85,5 +90,11 @@ public class Tienda {
     }
     public void setLineaProductos(List<LineaProducto> lineaProductos) {
         this.lineaProductos = lineaProductos;
+    }
+    public List<Cronograma> getCronomgrama(){
+        return cronogramas;
+    }
+    public void setCronogramas(List<Cronograma> cronogramas){
+        this.cronogramas = cronogramas;
     }
 }

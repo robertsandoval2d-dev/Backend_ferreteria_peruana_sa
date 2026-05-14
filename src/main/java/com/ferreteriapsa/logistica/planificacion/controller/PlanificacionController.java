@@ -24,7 +24,7 @@ public class PlanificacionController {
     }
 
     @PreAuthorize("hasRole('JEFE_DE_LINEA')")
-    @PostMapping("/generarCronograma")
+    @PostMapping("/cronogramas")
     public ResponseEntity<CronogramaResponse> generarCronograma(
             @AuthenticationPrincipal CustomUserPrincipal principal,
             @RequestBody List<DetalleCronogramaRequest> detalles) {
