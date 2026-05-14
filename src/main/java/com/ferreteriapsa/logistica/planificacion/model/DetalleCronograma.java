@@ -62,7 +62,7 @@ public class DetalleCronograma {
         this.fechaRequerida = fechaRequerida;
     }
 
-    public ProductoProveedor getProductoProducto() {
+    public ProductoProveedor getProductoProveedor() {
         return productoProveedor;
     }
 

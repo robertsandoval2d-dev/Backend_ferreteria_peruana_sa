@@ -65,5 +65,13 @@ public class Producto {
     public String getCategoria() {
         return categoria;
     }
+
+    public LineaProducto getLineaProducto(){
+        return lineaProducto;
+    }
+
+    public void setLineaProducto(LineaProducto lineaProducto){
+        this.lineaProducto = lineaProducto;
+    }
 }
 

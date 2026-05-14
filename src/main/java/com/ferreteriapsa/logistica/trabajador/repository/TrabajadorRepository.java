@@ -24,4 +24,21 @@ public interface TrabajadorRepository extends JpaRepository<Trabajador, Long> {
     """)
     List<TrabajadorResponse> listarTrabajadores();
 
+    // @Query("""
+    //     SELECT new com.ferreteriapsa.logistica.trabajador.dto.response.TrabajadorResponse(
+    //         t.trabajadorId, 
+    //         r.nombre, 
+    //         u.username, 
+    //         t.nombre, 
+    //         t.dni,
+    //         a.tienda.nombre  
+    //     )
+    //     FROM Trabajador t
+    //     JOIN t.usuario u
+    //     JOIN u.rol r
+    //     LEFT JOIN t.asignaciones a ON a.activo = true  
+    //     ORDER BY r.nombre
+    // """)
+    // List<TrabajadorResponse> listarTrabajadoresConTienda();
+
 }

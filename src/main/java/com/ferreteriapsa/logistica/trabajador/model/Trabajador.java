@@ -2,6 +2,7 @@ package com.ferreteriapsa.logistica.trabajador.model;
 
 import jakarta.persistence.*;
 import com.ferreteriapsa.logistica.auth.model.Usuario;
+import java.util.List;
 
 @Entity
 @Table(name = "trabajadores")
@@ -23,9 +24,11 @@ public class Trabajador {
     @JoinColumn(name = "usuario_id", nullable = false, unique = true)
     private Usuario usuario;
 
-    @ManyToOne
-    @JoinColumn(name = "tienda_id", nullable = true)
-    private Tienda tienda;
+    // @ManyToOne
+    // @JoinColumn(name = "tienda_id", nullable = true)
+    // private Tienda tienda;
+    @OneToMany(mappedBy = "trabajador")
+    private List<Asignacion> asignaciones;
 
 
     // constructores
@@ -66,11 +69,16 @@ public class Trabajador {
     public void setUsuario(Usuario usuario) {
         this.usuario = usuario;
     }
-    public Tienda getTienda() {
-        return tienda;
+    // public Tienda getTienda() {
+    //     return tienda;
+    // }
+    // public void setTienda(Tienda tienda) {
+    //     this.tienda = tienda;
+    // }
+    public List<Asignacion> getAsignaciones(){
+        return asignaciones;
     }
-    public void setTienda(Tienda tienda) {
-        this.tienda = tienda;
+    public void setAsignaciones(List<Asignacion> asignaciones){
+        this.asignaciones = asignaciones;
     }
-
 }

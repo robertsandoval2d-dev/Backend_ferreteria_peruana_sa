@@ -53,8 +53,8 @@ public class PlanificacionService {
         cronograma.setTrabajador(trabajador);
 
         //referenciar la tienda
-        Tienda tienda = trabajador.getTienda();
-        cronograma.setTienda(tienda);
+        // Tienda tienda = trabajador.getTienda();
+        // cronograma.setTienda(tienda);
         
         // Guardar cronograma primero
         cronograma = cronogramaRepository.save(cronograma);
@@ -94,4 +94,44 @@ public class PlanificacionService {
 
         return response;
     }
+
+//     public List<ListaCronogramasResponse> listarCronogramasPendientesPorTrabajador(Long trabajadorId){
+
+//         List<Cronograma> cronogramas =
+//                 cronogramaRepository
+//                         .listarCronogramasPendientesPorTrabajador(trabajadorId);
+
+//         return cronogramas.stream()
+//                 .map(c -> new ListaCronogramasResponse(
+
+//                         c.getCronogramaId(),
+//                         c.getDetallesCronograma()
+//                                 .get(0)
+//                                 .getProductoProveedor()
+//                                 .getProducto()
+//                                 .getLineaProducto()
+//                                 .getNombre(),
+
+//                         c.getDetallesCronograma()
+//                                 .stream()
+//                                 .map(dc -> new DetalleCronogramaDTO(
+
+//                                         dc.getProductoProveedor()
+//                                                 .getProveedor()
+//                                                 .getNombre(),
+
+//                                         dc.getProductoProveedor()
+//                                                 .getProducto()
+//                                                 .getNombre(),
+
+//                                         dc.getCantidad(),
+
+//                                         dc.getFechaRequerida()
+
+//                                 ))
+//                                 .toList()
+
+//                 ))
+//                 .toList();
+//     }
 }

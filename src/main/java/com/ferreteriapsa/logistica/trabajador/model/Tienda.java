@@ -25,15 +25,18 @@ public class Tienda {
     @JoinColumn(name="almacen_id")
     private Almacen almacen;
 
-    @OneToMany(mappedBy = "tienda")
-    private List<Trabajador> trabajadores;
+    // @OneToMany(mappedBy = "tienda")
+    // private List<Trabajador> trabajadores;
 
     @OneToMany(mappedBy = "tienda")
     private List<Cronograma> cronogramas;
 
+    // @OneToMany(mappedBy = "tienda")
+    // @OrderBy("nombre ASC")
+    // private List<LineaProducto> lineaProductos;
+
     @OneToMany(mappedBy = "tienda")
-    @OrderBy("nombre ASC")
-    private List<LineaProducto> lineaProductos;
+    private List<Asignacion> asignaciones;
 
     // constructores
     public Tienda() {}
@@ -79,22 +82,28 @@ public class Tienda {
     public void setAlmacen(Almacen almacen) {
         this.almacen = almacen;
     }
-    public List<Trabajador> getTrabajadores() {
-        return trabajadores;
-    }
-    public void setTrabajador(List<Trabajador> trabajadores) {
-        this.trabajadores = trabajadores;
-    }
-    public List<LineaProducto> getLineaProductos() {
-        return lineaProductos;
-    }
-    public void setLineaProductos(List<LineaProducto> lineaProductos) {
-        this.lineaProductos = lineaProductos;
-    }
-    public List<Cronograma> getCronomgrama(){
+    // public List<Trabajador> getTrabajadores() {
+    //     return trabajadores;
+    // }
+    // public void setTrabajador(List<Trabajador> trabajadores) {
+    //     this.trabajadores = trabajadores;
+    // }
+    // public List<LineaProducto> getLineaProductos() {
+    //     return lineaProductos;
+    // }
+    // public void setLineaProductos(List<LineaProducto> lineaProductos) {
+    //     this.lineaProductos = lineaProductos;
+    // }
+    public List<Cronograma> getCronomgramas(){
         return cronogramas;
     }
     public void setCronogramas(List<Cronograma> cronogramas){
         this.cronogramas = cronogramas;
+    }
+    public List<Asignacion> getAsignaciones(){
+        return asignaciones;
+    }
+    public void setAsignaciones(List<Asignacion> asignaciones){
+        this.asignaciones = asignaciones;
     }
 }

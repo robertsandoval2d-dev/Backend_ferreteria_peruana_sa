@@ -82,4 +82,12 @@ public class Cronograma {
     public void setTienda(Tienda tienda){
         this.tienda = tienda;
     }
+
+    public List<DetalleCronograma> getDetallesCronograma(){
+        return detallesCronograma;
+    }
+
+    public void setDetallesCronograma(List<DetalleCronograma> detallesCronograma){
+        this.detallesCronograma = detallesCronograma;
+    }
 }

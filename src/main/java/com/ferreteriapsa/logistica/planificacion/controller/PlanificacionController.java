@@ -9,8 +9,8 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import com.ferreteriapsa.logistica.auth.config.CustomUserPrincipal;
-import com.ferreteriapsa.logistica.planificacion.dto.request.DetalleCronogramaRequest;
-import com.ferreteriapsa.logistica.planificacion.dto.response.CronogramaResponse;
+import com.ferreteriapsa.logistica.planificacion.dto.request.*;
+import com.ferreteriapsa.logistica.planificacion.dto.response.*;
 import com.ferreteriapsa.logistica.planificacion.service.PlanificacionService;
 
 @RestController
@@ -34,4 +34,14 @@ public class PlanificacionController {
         CronogramaResponse response = planificacionService.generarCronograma(trabajadorId,detalles);
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
+
+    // @PreAuthorize("hasRole('ADMINISTRADOR_DE_TIENDA')")
+    // @GetMapping("/cronogramas")
+    // public ResponseEntity<List<ListaCronogramasResponse>> listarCronogramasPendientesPorTrabajador(
+    //         @AuthenticationPrincipal CustomUserPrincipal principal){
+
+    //     Long trabajadorId = principal.getTrabajadorId();
+    //     List<ListaCronogramasResponse> listaCronogramas = planificacionService.listarCronogramasPendientesPorTrabajador(trabajadorId);
+    //     return new ResponseEntity<>(listaCronogramas,HttpStatus.OK);
+    // }
 }

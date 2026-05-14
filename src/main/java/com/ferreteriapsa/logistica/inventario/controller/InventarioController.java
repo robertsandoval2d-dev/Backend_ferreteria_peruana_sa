@@ -20,15 +20,15 @@ public class InventarioController {
     public InventarioController(InventarioService inventarioService) {
         this.inventarioService = inventarioService;
     }
-    @PreAuthorize("hasRole('JEFE_DE_LINEA')")
-    @GetMapping("/productos-linea")
-    public ResponseEntity<List<InventarioDTO>> listarLineaProducto(
-            @AuthenticationPrincipal CustomUserPrincipal principal) {
+    // @PreAuthorize("hasRole('JEFE_DE_LINEA')")
+    // @GetMapping("/productos-linea")
+    // public ResponseEntity<List<InventarioDTO>> listarLineaProducto(
+    //         @AuthenticationPrincipal CustomUserPrincipal principal) {
 
-        Long trabajadorId = principal.getTrabajadorId();
+    //     Long trabajadorId = principal.getTrabajadorId();
 
-        List<InventarioDTO> listaProductos = inventarioService.listarInventarioLinea(trabajadorId);
-        return new ResponseEntity<>(listaProductos, HttpStatus.OK);
-    }
+    //     List<InventarioDTO> listaProductos = inventarioService.listarInventarioLinea(trabajadorId);
+    //     return new ResponseEntity<>(listaProductos, HttpStatus.OK);
+    // }
 
 }
