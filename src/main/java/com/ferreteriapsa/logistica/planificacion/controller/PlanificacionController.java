@@ -44,4 +44,11 @@ public class PlanificacionController {
         List<ListaCronogramasResponse> listaCronogramas = planificacionService.listarCronogramasPendientesPorTrabajador(trabajadorId);
         return new ResponseEntity<>(listaCronogramas,HttpStatus.OK);
     }
+
+    @PreAuthorize("hasRole('ADMINISTRADOR_DE_TIENDA')")
+    @GetMapping("/cronogramas-proveedor")
+    public ResponseEntity<List<VistaPreviaResponse>> obtenerVistaPreviaPendientes(){
+        List<VistaPreviaResponse> vistaPrevia = planificacionService.obtenerVistaPreviaPendientes();
+        return new ResponseEntity<>(vistaPrevia,HttpStatus.OK);
+    }
 }

@@ -21,6 +21,9 @@ public class DetalleCronograma {
     @Column(name="fecha_requerida", nullable = false)
     private LocalDate fechaRequerida;
 
+    @Column(nullable = false)
+    private String estado = "PENDIENTE";
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "cronograma_id", nullable = false)
     private Cronograma cronograma;
@@ -76,5 +79,13 @@ public class DetalleCronograma {
 
     public void setCronograma(Cronograma cronograma){
         this.cronograma = cronograma;
+    }
+
+    public String getEstado() { 
+        return estado; 
+    }
+    
+    public void setEstado(String estado) { 
+        this.estado = estado; 
     }
 }

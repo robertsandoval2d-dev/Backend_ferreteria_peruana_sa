@@ -16,9 +16,11 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.http.HttpStatus;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class PlanificacionService {
@@ -41,7 +43,6 @@ public class PlanificacionService {
 
         // Crear cronograma
         Cronograma cronograma = new Cronograma();
-        cronograma.setEstado("pendiente");
         cronograma.setFechaCreacion(LocalDateTime.now());
 
         // Referenciar el trabajador
@@ -74,6 +75,7 @@ public class PlanificacionService {
 
             detalle.setCantidad(req.getCantidad());
             detalle.setFechaRequerida(req.getFechaRequerida());
+            detalle.setEstado("PENDIENTE");
 
             // referenciar productoProveedor
             ProductoProveedor pp = productoProveedorRepository
@@ -96,7 +98,6 @@ public class PlanificacionService {
         // Response
         CronogramaResponse response = new CronogramaResponse();
         response.setCronogramaId(cronograma.getCronogramaId());
-        response.setEstado(cronograma.getEstado());
         response.setFechaCreacion(cronograma.getFechaCreacion());
 
         return response;
@@ -106,7 +107,7 @@ public class PlanificacionService {
 
         List<Cronograma> cronogramas =
                 cronogramaRepository
-                        .listarCronogramasPendientesPorTrabajador(trabajadorId);
+                        .listarCronogramasConDetallesPendientes(trabajadorId);
 
         return cronogramas.stream()
                 .map(c -> new ListaCronogramasResponse(
@@ -140,5 +141,43 @@ public class PlanificacionService {
 
                 ))
                 .toList();
+    }
+
+     public List<VistaPreviaResponse> obtenerVistaPreviaPendientes() {
+// 1. Traemos solo los detalles que están realmente pendientes
+    List<DetalleCronograma> detallesPendientes = detalleCronogramaRepository.findAllByEstado("PENDIENTE");
+
+    // 2. Agrupamos por Proveedor (la lógica de agrupación sigue siendo eficiente)
+    return detallesPendientes.stream()
+        .collect(Collectors.groupingBy(
+            detalle -> detalle.getProductoProveedor().getProveedor()
+        ))
+        .entrySet().stream()
+        .map(entry -> {
+            var proveedor = entry.getKey();
+            var listaDetalles = entry.getValue();
+
+            List<DetalleVistaPreviaDTO> detallesDTO = listaDetalles.stream()
+                .map(d -> new DetalleVistaPreviaDTO(
+                    d.getProductoProveedor().getProducto().getProductoId(),
+                    d.getProductoProveedor().getProducto().getNombre(),
+                    d.getCantidad(),
+                    d.getProductoProveedor().getPrecio(),
+                    d.getFechaRequerida()
+                ))
+                .collect(Collectors.toList());
+
+            BigDecimal montoTotal = detallesDTO.stream()
+                .map(DetalleVistaPreviaDTO::getSubTotal)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+            return new VistaPreviaResponse(
+                proveedor.getProveedorId(),
+                proveedor.getNombre(),
+                montoTotal,
+                detallesDTO
+            );
+        })
+        .collect(Collectors.toList());
     }
 }

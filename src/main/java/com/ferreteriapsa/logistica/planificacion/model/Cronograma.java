@@ -17,9 +17,6 @@ public class Cronograma {
     @Column(name = "cronograma_id")
     private Long cronogramaId;
 
-    @Column(nullable = false)   
-    private String estado;
-
     @Column(name="fecha_creacion", nullable = false)
     private LocalDateTime fechaCreacion;
 
@@ -37,11 +34,6 @@ public class Cronograma {
     // constructores
     public Cronograma(){}
 
-    public Cronograma(String estado, LocalDateTime fechaCreacion){
-        this.estado = estado;
-        this.fechaCreacion = fechaCreacion;
-    }
-
     //getters and setters
     public Long getCronogramaId() {
         return cronogramaId;
@@ -49,14 +41,6 @@ public class Cronograma {
 
     public void setCronogramaId(Long cronogramaId) {
         this.cronogramaId = cronogramaId;
-    }
-
-    public String getEstado() {
-        return estado;
-    }
-
-    public void setEstado(String estado) {
-        this.estado = estado;
     }
 
     public LocalDateTime getFechaCreacion() {

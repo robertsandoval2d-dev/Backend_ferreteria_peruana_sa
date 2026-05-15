@@ -24,9 +24,9 @@ public interface CronogramaRepository extends JpaRepository<Cronograma, Long> {
             WHERE a.trabajador.trabajadorId = :trabajadorId
             AND a.activo = true
         )
-        AND c.estado = 'pendiente'
+        AND dc.estado = 'PENDIENTE'
     """)
-    List<Cronograma> listarCronogramasPendientesPorTrabajador(
+    List<Cronograma> listarCronogramasConDetallesPendientes(
         @Param("trabajadorId") Long trabajadorId
     );
 }
