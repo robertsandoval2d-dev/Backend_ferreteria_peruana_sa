@@ -30,7 +30,7 @@ public class Almacen {
 
     // getters y setters
 
-    public Long getId() {
+    public Long getAlmacenId() {
         return almacenId;
     }
 

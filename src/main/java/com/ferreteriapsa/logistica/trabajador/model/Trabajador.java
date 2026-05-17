@@ -24,9 +24,6 @@ public class Trabajador {
     @JoinColumn(name = "usuario_id", nullable = false, unique = true)
     private Usuario usuario;
 
-    // @ManyToOne
-    // @JoinColumn(name = "tienda_id", nullable = true)
-    // private Tienda tienda;
     @OneToMany(mappedBy = "trabajador")
     private List<Asignacion> asignaciones;
 
@@ -42,7 +39,7 @@ public class Trabajador {
 
     // getters y setters
 
-    public Long getId() {
+    public Long getTrabajadorId() {
         return trabajadorId;
     }
 
@@ -69,12 +66,7 @@ public class Trabajador {
     public void setUsuario(Usuario usuario) {
         this.usuario = usuario;
     }
-    // public Tienda getTienda() {
-    //     return tienda;
-    // }
-    // public void setTienda(Tienda tienda) {
-    //     this.tienda = tienda;
-    // }
+
     public List<Asignacion> getAsignaciones(){
         return asignaciones;
     }

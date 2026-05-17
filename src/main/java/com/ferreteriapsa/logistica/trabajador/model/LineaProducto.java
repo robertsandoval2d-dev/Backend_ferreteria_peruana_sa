@@ -18,13 +18,6 @@ public class LineaProducto {
 
     private String descripcion;
 
-    // @OneToOne
-    // @JoinColumn(name = "jefe_de_linea_id")
-    // private Trabajador jefeDeLinea;
-
-    // @ManyToOne
-    // @JoinColumn(name = "tienda_id", nullable = false)
-    // private Tienda tienda;
     @OneToMany(mappedBy = "lineaProducto")
     private List<Asignacion> asignaciones;
 
@@ -38,7 +31,7 @@ public class LineaProducto {
 
     // getters y setters
 
-    public Long getId() {
+    public Long getLineaProductoId() {
         return lineaProductoId;
     }
 
@@ -57,12 +50,7 @@ public class LineaProducto {
     public void setDescripcion(String descripcion) {
         this.descripcion = descripcion;
     }
-    // public Trabajador getJefeDeLinea() {
-    //     return jefeDeLinea;
-    // }
-    // public void setJefeDeLinea(Trabajador jefeDeLinea) {
-    //     this.jefeDeLinea = jefeDeLinea;
-    // }
+
     public List<Asignacion> getAsignaciones(){
         return asignaciones;
     }

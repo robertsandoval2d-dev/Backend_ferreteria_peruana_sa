@@ -35,10 +35,10 @@ public class Usuario {
     }
 
     // getters y setters
-    public Long getId() {
+    public Long getUsuarioId() {
         return usuarioId;
     }
-    public void setId(Long usuarioId) {
+    public void setUsuarioId(Long usuarioId) {
         this.usuarioId = usuarioId;
     }
     public String getUsername() {

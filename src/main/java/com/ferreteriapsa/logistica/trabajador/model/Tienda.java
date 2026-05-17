@@ -25,15 +25,8 @@ public class Tienda {
     @JoinColumn(name="almacen_id")
     private Almacen almacen;
 
-    // @OneToMany(mappedBy = "tienda")
-    // private List<Trabajador> trabajadores;
-
     @OneToMany(mappedBy = "tienda")
     private List<Cronograma> cronogramas;
-
-    // @OneToMany(mappedBy = "tienda")
-    // @OrderBy("nombre ASC")
-    // private List<LineaProducto> lineaProductos;
 
     @OneToMany(mappedBy = "tienda")
     private List<Asignacion> asignaciones;
@@ -49,7 +42,7 @@ public class Tienda {
 
     // getters y setters
 
-    public Long getId() {
+    public Long getTiendaId() {
         return tiendaId;
     }
 
@@ -82,18 +75,7 @@ public class Tienda {
     public void setAlmacen(Almacen almacen) {
         this.almacen = almacen;
     }
-    // public List<Trabajador> getTrabajadores() {
-    //     return trabajadores;
-    // }
-    // public void setTrabajador(List<Trabajador> trabajadores) {
-    //     this.trabajadores = trabajadores;
-    // }
-    // public List<LineaProducto> getLineaProductos() {
-    //     return lineaProductos;
-    // }
-    // public void setLineaProductos(List<LineaProducto> lineaProductos) {
-    //     this.lineaProductos = lineaProductos;
-    // }
+
     public List<Cronograma> getCronomgramas(){
         return cronogramas;
     }

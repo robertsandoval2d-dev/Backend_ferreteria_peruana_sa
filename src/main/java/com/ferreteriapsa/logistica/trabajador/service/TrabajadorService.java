@@ -99,7 +99,7 @@ public class TrabajadorService {
                             anterior.setFechaInicio(LocalDate.now()); //inicia hoy
                             asignacionRepository.save(anterior);
                         }
-                        else if (!anterior.getTrabajador().getId().equals(trabajador.getId())) {
+                        else if (!anterior.getTrabajador().getTrabajadorId().equals(trabajador.getTrabajadorId())) {
                             // CASO 2: La línea está OCUPADA por otro. Inactivamos (rotación) y creamos nuevo.
                             anterior.setActivo(false);
                             anterior.setFechaFin(LocalDate.now());
@@ -126,7 +126,7 @@ public class TrabajadorService {
         }
 
         return new TrabajadorResponse(
-            trabajador.getId(), 
+            trabajador.getTrabajadorId(), 
             usuario.getRol().getNombre(), 
             usuario.getUsername(),
             trabajador.getNombre(),
@@ -178,11 +178,11 @@ public class TrabajadorService {
             ));
 
         // Verificamos si los datos de asignación han cambiado
-        boolean cambioTienda = (asignacionActual == null) || !asignacionActual.getTienda().getId().equals(request.getTiendaId());
+        boolean cambioTienda = (asignacionActual == null) || !asignacionActual.getTienda().getTiendaId().equals(request.getTiendaId());
         boolean cambioLinea = false;
 
         if (rol.equals("jefe_de_linea") && asignacionActual != null) {
-            Long lineaActualId = (asignacionActual.getLineaProducto() != null) ? asignacionActual.getLineaProducto().getId() : null;
+            Long lineaActualId = (asignacionActual.getLineaProducto() != null) ? asignacionActual.getLineaProducto().getLineaProductoId() : null;
             cambioLinea = !request.getLineaId().equals(lineaActualId);
         }
 
@@ -213,7 +213,7 @@ public class TrabajadorService {
                         previa.setTrabajador(trabajador);
                         previa.setFechaInicio(LocalDate.now());
                         asignacionRepository.save(previa);
-                    } else if (!previa.getTrabajador().getId().equals(trabajador.getId())) {
+                    } else if (!previa.getTrabajador().getTrabajadorId().equals(trabajador.getTrabajadorId())) {
                         // CASO 2: Puesto Ocupado por OTRO -> Inactivamos al anterior y creamos nuevo
                         previa.setActivo(false);
                         previa.setFechaFin(LocalDate.now());
@@ -245,7 +245,7 @@ public class TrabajadorService {
 
         // 6. Construir respuesta
         TrabajadorUpdateResponse response = new TrabajadorUpdateResponse();
-        response.setTrabajadorId(trabajador.getId());
+        response.setTrabajadorId(trabajador.getTrabajadorId());
         response.setNombre(trabajador.getNombre());
         response.setDni(trabajador.getDni());
         response.setNombreTienda(nuevaTienda.getNombre());
@@ -263,7 +263,7 @@ public class TrabajadorService {
 
         return tiendas.stream()
             .map(tienda -> new TiendaResponse(
-                tienda.getId(),
+                tienda.getTiendaId(),
                 tienda.getNombre(),
                 tienda.getAsignaciones().stream()
                     // 1. Filtramos solo las asignaciones que tienen línea y están activas
@@ -272,7 +272,7 @@ public class TrabajadorService {
                     .map(asig -> {
                         LineaProducto lp = asig.getLineaProducto();
                         return new LineaProductoResponse(
-                            lp.getId(),
+                            lp.getLineaProductoId(),
                             lp.getNombre()
                         );
                     })

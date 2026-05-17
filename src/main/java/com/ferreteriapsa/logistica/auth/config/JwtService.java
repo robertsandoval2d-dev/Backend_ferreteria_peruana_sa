@@ -29,7 +29,7 @@ public class JwtService {
                 .signWith(getKey());
 
         if (usuario.getTrabajador() != null) {
-            builder.claim("trabajadorId", usuario.getTrabajador().getId());
+            builder.claim("trabajadorId", usuario.getTrabajador().getTrabajadorId());
             builder.claim("nombre", usuario.getTrabajador().getNombre());
         }
 
