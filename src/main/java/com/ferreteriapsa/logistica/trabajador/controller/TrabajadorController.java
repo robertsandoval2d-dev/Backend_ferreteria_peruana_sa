@@ -44,6 +44,15 @@ public class TrabajadorController {
         
         TrabajadorUpdateResponse trabajadorActualizado = trabajadorService.actualizarTrabajador(request, trabajadorId);
         return new ResponseEntity<>(trabajadorActualizado,HttpStatus.OK);
+        //return ResponseEntity.ok(trabajadorActualizado);
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> desvincularTrabajador(@PathVariable("id") Long trabajadorId){
+        trabajadorService.desvincularTrabajador(trabajadorId);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        //return ResponseEntity.noContent().build();
     }
 
     @PreAuthorize("hasRole('ADMIN')")

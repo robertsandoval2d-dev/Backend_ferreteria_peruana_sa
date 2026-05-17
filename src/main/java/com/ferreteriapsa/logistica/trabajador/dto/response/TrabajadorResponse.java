@@ -4,17 +4,35 @@ public class TrabajadorResponse {
     private Long trabajadorId;
     private String rol;
     private String username;
+    private Boolean cuentaActiva;
     private String nombre;
     private String dni;
+    private Long tiendaId;
+    private String nombreTienda;
+    private Long lineaId;
 
     public TrabajadorResponse() {
     }
-    public TrabajadorResponse(Long trabajadorId,String rol, String username, String nombre, String dni) {
+    public TrabajadorResponse(Long trabajadorId,String rol, String username, Boolean cuentaActiva, String nombre, String dni) {
         this.trabajadorId = trabajadorId;
         this.rol = rol;
         this.username = username;
+        this.cuentaActiva = cuentaActiva;
         this.nombre = nombre;
         this.dni = dni;
+    }
+    public TrabajadorResponse(Long trabajadorId,String rol, String username,Boolean cuentaActiva, String nombre, String dni,
+        Long tiendaId, String nombreTienda, Long lineaId
+    ) {
+        this.trabajadorId = trabajadorId;
+        this.rol = rol;
+        this.username = username;
+        this.cuentaActiva = cuentaActiva;
+        this.nombre = nombre;
+        this.dni = dni;
+        this.tiendaId = tiendaId;
+        this.nombreTienda = nombreTienda;
+        this.lineaId = lineaId;
     }
 
     public Long getTrabajadorId(){
@@ -46,5 +64,17 @@ public class TrabajadorResponse {
     }
     public void setDni(String dni){
         this.dni = dni;
+    }
+    public Long getTiendaId(){
+        return tiendaId;
+    }
+    public String getNombreTienda(){
+        return nombreTienda;
+    }
+    public Long getLineaId(){
+        return lineaId;
+    }
+    public Boolean getCuentaActiva(){
+        return cuentaActiva;
     }
 }

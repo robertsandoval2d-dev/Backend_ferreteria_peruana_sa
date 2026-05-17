@@ -129,13 +129,14 @@ public class TrabajadorService {
             trabajador.getTrabajadorId(), 
             usuario.getRol().getNombre(), 
             usuario.getUsername(),
+            usuario.isActivo(),
             trabajador.getNombre(),
             trabajador.getDni()
         );
     }
 
     public List<TrabajadorResponse> listarTrabajadores(){
-        return trabajadorRepository.listarTrabajadores();
+        return trabajadorRepository.listarTrabajadoresConTienda();
     }
 
     @SuppressWarnings("null")
@@ -191,9 +192,23 @@ public class TrabajadorService {
             
             // A) Cerrar la asignación anterior del trabajador (Trazabilidad)
             if (asignacionActual != null) {
+                // 1. Inactivamos su periodo en el puesto anterior
                 asignacionActual.setActivo(false);
                 asignacionActual.setFechaFin(LocalDate.now());
                 asignacionRepository.save(asignacionActual);
+
+                // 2. Creamos la vacante SOLAMENTE si es un rol que requiere un puesto específico (Jefe de Línea)
+                if (rol.equals("jefe_de_linea")) {
+                    Asignacion vacanteDejada = new Asignacion();
+                    vacanteDejada.setTienda(asignacionActual.getTienda());
+                    vacanteDejada.setLineaProducto(asignacionActual.getLineaProducto());
+                    vacanteDejada.setTrabajador(null); 
+                    vacanteDejada.setFechaInicio(null);
+                    vacanteDejada.setFechaFin(null);
+                    vacanteDejada.setActivo(true); 
+                    
+                    asignacionRepository.save(vacanteDejada);
+                }
             }
 
             // B) Lógica de ocupación de nuevo puesto
@@ -256,6 +271,46 @@ public class TrabajadorService {
         }
 
         return response;
+    }
+
+    @SuppressWarnings("null")
+    @Transactional
+    public void desvincularTrabajador(Long trabajadorId) {
+        // 1. Buscamos al trabajador
+        Trabajador trabajador = trabajadorRepository.findById(trabajadorId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Trabajador no encontrado"));
+
+        // 2. Obtenemos el rol del trabajador para saber cómo proceder
+        String rol = trabajador.getUsuario().getRol().getNombre().toLowerCase();
+
+        // 3. Buscamos su asignación activa actual
+        Asignacion asignacionActual = trabajador.getAsignaciones().stream()
+                .filter(Asignacion::isActivo)
+                .findFirst()
+                .orElse(null);
+
+        if (asignacionActual != null) {
+            // 4. Cerramos la asignación actual (aplica para todos los roles)
+            asignacionActual.setActivo(false);
+            asignacionActual.setFechaFin(LocalDate.now()); 
+            asignacionRepository.save(asignacionActual);
+
+            // 5. Creamos la vacante SOLAMENTE si es un Jefe de Línea
+            if (rol.equals("jefe_de_linea")) {
+                Asignacion vacanteDejada = new Asignacion();
+                vacanteDejada.setTienda(asignacionActual.getTienda()); 
+                vacanteDejada.setLineaProducto(asignacionActual.getLineaProducto()); 
+                vacanteDejada.setTrabajador(null);
+                vacanteDejada.setFechaInicio(null); 
+                vacanteDejada.setFechaFin(null); 
+                vacanteDejada.setActivo(true); 
+                
+                asignacionRepository.save(vacanteDejada);
+            }
+        }
+
+        // 6. Desactivamos la cuenta a nivel de autenticación/login
+        autenticacionService.desactivarCuentaPorTrabajador(trabajadorId);
     }
 
     public List<TiendaResponse> listarTiendasConLineas(){

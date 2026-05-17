@@ -7,6 +7,9 @@ import org.springframework.http.HttpStatus;
 
 import com.ferreteriapsa.logistica.auth.model.*;
 import com.ferreteriapsa.logistica.auth.repository.*;
+
+import jakarta.transaction.Transactional;
+
 import com.ferreteriapsa.logistica.auth.dto.request.UsuarioRequest;
 import com.ferreteriapsa.logistica.auth.dto.response.AuthResponse;
 import com.ferreteriapsa.logistica.auth.config.JwtService;
@@ -52,6 +55,17 @@ public class AutenticacionService implements AutenticacionInterface{
         // 3. guardar en BD (Hibernate)
         return usuarioRepository.save(usuario);
 
+    }
+
+    @Override
+    @Transactional
+    public void desactivarCuentaPorTrabajador(Long trabajadorId){
+        Usuario usuario = usuarioRepository.findByTrabajador_TrabajadorId(trabajadorId)
+            .orElseThrow(()-> new ResponseStatusException(
+                HttpStatus.NOT_FOUND,
+                "No se encontró una cuenta de usuario para el trabajador especificado"));
+        usuario.setActivo(false);
+        usuarioRepository.save(usuario);
     }
 
     public AuthResponse login(UsuarioRequest request) {
