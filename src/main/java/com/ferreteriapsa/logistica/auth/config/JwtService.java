@@ -31,6 +31,16 @@ public class JwtService {
         if (usuario.getTrabajador() != null) {
             builder.claim("trabajadorId", usuario.getTrabajador().getTrabajadorId());
             builder.claim("nombre", usuario.getTrabajador().getNombre());
+            if ("JEFE_DE_LINEA".equals(usuario.getRol().getNombre()) && 
+                usuario.getTrabajador().getAsignaciones() != null) {
+                usuario.getTrabajador().getAsignaciones().stream()
+                    .filter(asignacion -> asignacion.isActivo())
+                    .filter(asignacion -> asignacion.getLineaProducto() != null)
+                    .findFirst()
+                    .ifPresent(asignacionActiva ->{
+                        builder.claim("linea", asignacionActiva.getLineaProducto().getNombre());
+                    });
+            }
         }
 
         return builder.compact();
