@@ -20,7 +20,8 @@ public interface TrabajadorRepository extends JpaRepository<Trabajador, Long> {
             t.dni,
             ti.tiendaId,
             ti.nombre,
-            lp.lineaProductoId
+            lp.lineaProductoId,
+            lp.nombre
         )
         FROM Trabajador t
         JOIN t.usuario u
