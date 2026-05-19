@@ -6,12 +6,13 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class DetalleVistaPreviaDTO {
 
+    private String nombreLinea;
     private Long productoId;
     private String nombreProducto;
     private Integer cantidad;
     private BigDecimal precioUnidad;
     
-    @JsonProperty("subTotal") 
+    @JsonProperty("subtotal") 
     private BigDecimal subTotal;
     
     private LocalDate fechaRequerida;
@@ -20,8 +21,10 @@ public class DetalleVistaPreviaDTO {
     public DetalleVistaPreviaDTO() {}
 
     // Constructor completo para facilitar el mapeo en el Service
-    public DetalleVistaPreviaDTO(Long productoId, String nombreProducto, Integer cantidad, 
+    public DetalleVistaPreviaDTO(String nombreLinea, Long productoId, String nombreProducto, Integer cantidad, 
                                  BigDecimal precioUnidad, LocalDate fechaRequerida) {
+
+        this.nombreLinea = nombreLinea;                            
         this.productoId = productoId;
         this.nombreProducto = nombreProducto;
         this.cantidad = cantidad;
@@ -83,5 +86,9 @@ public class DetalleVistaPreviaDTO {
 
     public void setFechaRequerida(LocalDate fechaRequerida) {
         this.fechaRequerida = fechaRequerida;
+    }
+
+    public String getNombreLinea(){
+        return nombreLinea;
     }
 }

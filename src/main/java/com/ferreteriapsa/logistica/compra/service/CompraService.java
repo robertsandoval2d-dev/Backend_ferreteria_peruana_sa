@@ -15,6 +15,9 @@ import com.ferreteriapsa.logistica.compra.dto.response.OrdenCompraResponse;
 import com.ferreteriapsa.logistica.compra.models.DetalleOrdenCompra;
 import com.ferreteriapsa.logistica.compra.models.OrdenCompra;
 import com.ferreteriapsa.logistica.planificacion.repository.DetalleCronogramaRepository;
+import com.ferreteriapsa.logistica.trabajador.model.Asignacion;
+import com.ferreteriapsa.logistica.trabajador.model.Tienda;
+import com.ferreteriapsa.logistica.trabajador.model.Trabajador;
 import com.ferreteriapsa.logistica.trabajador.repository.TrabajadorRepository;
 
 import java.time.LocalDateTime;
@@ -50,11 +53,26 @@ public class CompraService {
         Proveedor proveedor = proveedorRepository.findById(request.getProveedorId())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Proveedor no encontrado"));
 
+        // Referenciar el trabajador
+        Trabajador trabajador = trabajadorRepository.findById(trabajadorId)
+            .orElseThrow(() -> new ResponseStatusException( //404 NOT FOUND
+                    HttpStatus.NOT_FOUND,
+                    "Trabajador no encontrado"
+                ));
+
+        //referenciar la tienda
+        Tienda tienda = trabajador.getAsignaciones().stream()
+        .filter(Asignacion::isActivo)
+        .map(Asignacion::getTienda)
+        .findFirst()
+        .orElseThrow(null);
+
         OrdenCompra ordenCompra = new OrdenCompra();
         ordenCompra.setProveedor(proveedor);
         
         // Para el administrador usamos getReferenceById ya que el ID es confiable (viene del token)
-        ordenCompra.setAdministrador(trabajadorRepository.getReferenceById(trabajadorId));
+        ordenCompra.setAdministrador(trabajador);
+        ordenCompra.setTienda(tienda);
         
         ordenCompra.setPlazoFechaMaximo(request.getPlazoFechaMaximo());
         ordenCompra.setMontoTotalCalculado(request.getMontoTotalCalculado());
@@ -67,6 +85,7 @@ public class CompraService {
                     .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Producto no encontrado"));
 
             DetalleOrdenCompra detalle = new DetalleOrdenCompra();
+            detalle.setNombreLinea(producto.getLineaProducto().getNombre());
             detalle.setProducto(producto);
             detalle.setCantidad(detalleDto.getCantidad());
             detalle.setPrecioUnidad(detalleDto.getPrecioUnidad());
@@ -75,7 +94,8 @@ public class CompraService {
             // Actualizamos los detalles del cronograma a 'PROGRAMADO'
             detalleCronogramaRepository.actualizarEstadoAProgramado(
                     producto.getProductoId(), 
-                    proveedor.getProveedorId()
+                    proveedor.getProveedorId(),
+                    trabajadorId
             );
 
             return detalle;

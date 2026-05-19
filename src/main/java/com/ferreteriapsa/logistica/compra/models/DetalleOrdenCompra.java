@@ -14,6 +14,9 @@ public class DetalleOrdenCompra {
     @Column(name = "detalle_oc_id")
     private Long detalleOcId;
 
+    @Column(name = "nombre_linea", nullable = false)
+    private String nombreLinea;
+
     @Column(nullable = false)
     private Integer cantidad;
 
@@ -52,4 +55,7 @@ public class DetalleOrdenCompra {
 
     public Producto getProducto() { return producto; }
     public void setProducto(Producto producto) { this.producto = producto; }
+
+    public String getNombreLinea(){ return nombreLinea; }
+    public void setNombreLinea(String nombreLinea){ this.nombreLinea = nombreLinea; }
 }

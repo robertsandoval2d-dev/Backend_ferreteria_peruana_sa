@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import com.ferreteriapsa.logistica.catalogo.model.Proveedor;
+import com.ferreteriapsa.logistica.trabajador.model.Tienda;
 import com.ferreteriapsa.logistica.trabajador.model.Trabajador;
 
 import jakarta.persistence.*;
@@ -42,6 +43,10 @@ public class OrdenCompra {
     @JoinColumn(name = "administrador_id", nullable = false)
     private Trabajador administrador;
 
+    @ManyToOne
+    @JoinColumn(name = "tienda_id")
+    private Tienda tienda;
+
     @OneToMany(mappedBy = "ordenCompra", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<DetalleOrdenCompra> detalles;
 
@@ -75,4 +80,7 @@ public class OrdenCompra {
 
     public Trabajador getAdministrador() { return administrador; }
     public void setAdministrador(Trabajador administrador) { this.administrador = administrador; }
+
+    public Tienda getTienda(){ return tienda; } 
+    public void setTienda(Tienda tienda){ this.tienda = tienda; }
 }

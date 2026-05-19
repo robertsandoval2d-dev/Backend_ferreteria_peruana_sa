@@ -20,6 +20,16 @@ public interface DetalleCronogramaRepository extends JpaRepository<DetalleCronog
         WHERE dc.productoProveedor.producto.productoId = :productoId 
         AND dc.productoProveedor.proveedor.proveedorId = :proveedorId 
         AND dc.estado = 'PENDIENTE'
+        AND EXISTS (
+            SELECT 1 FROM Asignacion a 
+            WHERE a.tienda.tiendaId = dc.cronograma.tienda.tiendaId 
+            AND a.trabajador.trabajadorId = :trabajadorId 
+            AND a.activo = true
+        )
     """)
-    void actualizarEstadoAProgramado(@Param("productoId") Long productoId, @Param("proveedorId") Long proveedorId);
+    void actualizarEstadoAProgramado(
+            @Param("productoId") Long productoId, 
+            @Param("proveedorId") Long proveedorId,
+            @Param("trabajadorId") Long trabajadorId
+    );
 }

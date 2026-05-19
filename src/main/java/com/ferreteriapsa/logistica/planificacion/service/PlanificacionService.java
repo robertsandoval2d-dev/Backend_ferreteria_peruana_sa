@@ -55,8 +55,6 @@ public class PlanificacionService {
         cronograma.setTrabajador(trabajador);
 
         //referenciar la tienda
-        // Tienda tienda = trabajador.getTienda();
-        // cronograma.setTienda(tienda);
         Tienda tienda = trabajador.getAsignaciones().stream()
         .filter(Asignacion::isActivo)
         .map(Asignacion::getTienda)
@@ -159,6 +157,7 @@ public class PlanificacionService {
 
             List<DetalleVistaPreviaDTO> detallesDTO = listaDetalles.stream()
                 .map(d -> new DetalleVistaPreviaDTO(
+                    d.getProductoProveedor().getProducto().getLineaProducto().getNombre(),
                     d.getProductoProveedor().getProducto().getProductoId(),
                     d.getProductoProveedor().getProducto().getNombre(),
                     d.getCantidad(),

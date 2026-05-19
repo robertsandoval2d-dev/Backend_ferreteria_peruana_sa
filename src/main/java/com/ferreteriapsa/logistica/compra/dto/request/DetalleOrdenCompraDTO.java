@@ -3,12 +3,16 @@ package com.ferreteriapsa.logistica.compra.dto.request;
 import java.math.BigDecimal;
 
 public class DetalleOrdenCompraDTO {
+    private String nombreLinea;
     private Long productoId;
     private Integer cantidad;
     private BigDecimal precioUnidad;
     private BigDecimal subtotal;
 
     // Getters y Setters
+    public String getNombreLinea(){ return nombreLinea; }
+    public void setNombreLinea(String nombreLinea){ this.nombreLinea = nombreLinea; }
+
     public Long getProductoId() { return productoId; }
     public void setProductoId(Long productoId) { this.productoId = productoId; }
 
