@@ -6,6 +6,8 @@ import org.springframework.web.server.ResponseStatusException;
 
 
 import com.ferreteriapsa.logistica.compra.repository.OrdenCompraRepository;
+import com.ferreteriapsa.logistica.inventario.dto.response.OrdenesCompraResponse;
+import com.ferreteriapsa.logistica.inventario.dto.response.ProductoDTO;
 import com.ferreteriapsa.logistica.catalogo.model.Producto;
 import com.ferreteriapsa.logistica.catalogo.model.Proveedor;
 import com.ferreteriapsa.logistica.catalogo.repository.ProductoRepository;
@@ -23,6 +25,7 @@ import com.ferreteriapsa.logistica.trabajador.repository.TrabajadorRepository;
 import java.time.LocalDateTime;
 import java.util.stream.Collectors;
 import java.util.List;
+import java.util.Comparator;
 
 import org.springframework.http.HttpStatus;
 
@@ -111,6 +114,108 @@ public class CompraService {
         res.setFechaCreacion(guardada.getFechaCreacion());
         
         return res;
+    }
+
+    //ALMACENERO-GET
+    @Transactional(readOnly = true)
+    public List<OrdenesCompraResponse> listarOrdenesPorTiendaYProveedor(Long trabajadorId, Long proveedorId) {
+
+        Trabajador trabajador = trabajadorRepository.findById(trabajadorId)
+                .orElseThrow(() -> new ResponseStatusException( //404 NOT FOUND
+                        HttpStatus.NOT_FOUND,
+                        "Trabajador no encontrado"
+                ));
+
+        Long tiendaId = trabajador.getAsignaciones().stream()
+                .filter(Asignacion::isActivo)
+                .map(asignacion -> asignacion.getTienda().getTiendaId())
+                .findFirst()
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.BAD_REQUEST,
+                        "El trabajador no tiene tienda activa")
+                );
+
+
+        List<OrdenCompra> ordenesCompra;
+
+        if (proveedorId != null) {
+
+            ordenesCompra =
+                    ordenCompraRepository
+                            .listarOrdenesCompraPorTiendaYProveedor(
+                                    tiendaId,
+                                    proveedorId
+                            );
+
+        } else {
+
+            ordenesCompra =
+                    ordenCompraRepository
+                            .listarOrdenesCompraPorTienda(tiendaId);
+
+        }
+        ordenesCompra.sort(
+                Comparator.comparing(
+                        oc -> oc.getProveedor().getNombre()
+                )
+        );
+
+        List<OrdenesCompraResponse> ordenesCompraResponse = ordenesCompra.stream()
+                .map(oc -> {
+
+                    OrdenesCompraResponse compraResponse =
+                            new OrdenesCompraResponse();
+
+                    compraResponse.setOrdenCompraId(
+                            oc.getOrdenCompraId()
+                    );
+
+                    compraResponse.setNombreProveedor(
+                            oc.getProveedor().getNombre()
+                    );
+
+                    compraResponse.setFechaEntrega(
+                            oc.getFechaEntrega()
+                    );
+
+                    compraResponse.setPlazoFechaMaximo(
+                            oc.getPlazoFechaMaximo()
+                    );
+
+                    List<ProductoDTO> productos =
+                            oc.getDetalles().stream()
+                                    .map(detalle -> {
+
+                                        ProductoDTO productoDTO =
+                                                new ProductoDTO();
+
+                                        productoDTO.setProductoId(
+                                                detalle.getProducto().getProductoId()
+                                        );
+
+                                        productoDTO.setNombreProducto(
+                                                detalle.getProducto().getNombre()
+                                        );
+
+                                        productoDTO.setNombreLinea(
+                                                detalle.getNombreLinea()
+                                        );
+
+                                        productoDTO.setCantidad(
+                                                detalle.getCantidad()
+                                        );
+
+                                        return productoDTO;
+
+                                    }).toList();
+
+                    compraResponse.setProductos(productos);
+
+                    return compraResponse;
+
+                }).toList();
+
+        return ordenesCompraResponse;
     }
     
 }

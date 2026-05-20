@@ -1,8 +1,8 @@
 package com.ferreteriapsa.logistica.inventario.controller;
 
 import java.util.List;
+import java.util.Map;
 
-import com.ferreteriapsa.logistica.inventario.dto.response.OrdenesCompraResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -35,28 +35,14 @@ public class InventarioController {
     }
 
     @PreAuthorize("hasRole('ALMACENERO')")
-    @GetMapping("/ordenes-compra")
-    public ResponseEntity<List<OrdenesCompraResponse>> listarOrdenes(
-            @AuthenticationPrincipal CustomUserPrincipal principal,
-            @RequestParam(required = false) Long proveedorId){
-
-        Long trabajadorId = principal.getTrabajadorId();
-        List<OrdenesCompraResponse> listaOrdenesCompra = inventarioService.listarOrdenesPorTiendaYProveedor(
-                trabajadorId,
-                proveedorId
-        );
-        return ResponseEntity.ok(listaOrdenesCompra);
-    }
-
-    @PreAuthorize("hasRole('ALMACENERO')")
     @PostMapping("/ordenes-compra/recepcion")
-    public ResponseEntity<String> registrarRecepcion(
+    public ResponseEntity<Map<String,String>> registrarRecepcion(
             @RequestBody RegistroMercaderiaRequest request){
 
         inventarioService.regitrarOrdenCompra(request);
 
         return ResponseEntity.ok(
-                "Mercadería recepcionada correctamente"
+                Map.of("mensaje", "Mercadería recepcionada correctamente")
         );
     }
 }
