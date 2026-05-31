@@ -10,7 +10,6 @@ import com.ferreteriapsa.logistica.auth.config.CustomUserPrincipal;
 import com.ferreteriapsa.logistica.compra.dto.request.*;
 import com.ferreteriapsa.logistica.compra.dto.response.*;
 import com.ferreteriapsa.logistica.compra.service.CompraService;
-import com.ferreteriapsa.logistica.inventario.dto.response.OrdenesCompraResponse;
 
 import java.util.List;
 
@@ -34,18 +33,29 @@ public class CompraController {
         return new ResponseEntity<>(response,HttpStatus.CREATED);
     }
 
-    @PreAuthorize("hasRole('ALMACENERO')")
+    @PreAuthorize("hasAnyRole('ALMACENERO','JEFE_DE_LINEA')")
     @GetMapping("/ordenes-compra")
     public ResponseEntity<List<OrdenesCompraResponse>> listarOrdenes(
             @AuthenticationPrincipal CustomUserPrincipal principal,
-            @RequestParam(required = false) Long proveedorId){
+            @RequestParam(required = false) Long ordenId){
 
         Long trabajadorId = principal.getTrabajadorId();
         List<OrdenesCompraResponse> listaOrdenesCompra = compraService.listarOrdenesPorTiendaYProveedor(
                 trabajadorId,
-                proveedorId
+                ordenId
         );
         return ResponseEntity.ok(listaOrdenesCompra);
+    }
+
+    @PreAuthorize("hasRole('JEFE_DE_LINEA')")
+    @GetMapping("/ordenes-compra/simple")
+    public ResponseEntity<List<OrdenCompraSimpleResponse>> listarOrdenesSimple(
+            @AuthenticationPrincipal CustomUserPrincipal principal){
+
+        Long trabajadorId = principal.getTrabajadorId();
+        List<OrdenCompraSimpleResponse> listaOrdenesCompraSimple = compraService.listarOrdenesCompraSimple(trabajadorId);
+
+        return ResponseEntity.ok(listaOrdenesCompraSimple);
     }
     
 }

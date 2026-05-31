@@ -1,4 +1,4 @@
-package com.ferreteriapsa.logistica.inventario.dto.response;
+package com.ferreteriapsa.logistica.compra.dto.response;
 
 import java.time.LocalDateTime;
 import java.util.List;

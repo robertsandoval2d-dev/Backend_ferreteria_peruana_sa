@@ -5,6 +5,7 @@ import com.ferreteriapsa.logistica.compra.models.OrdenCompra;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 public interface OrdenCompraRepository extends JpaRepository<OrdenCompra,Long>{
@@ -14,13 +15,12 @@ public interface OrdenCompraRepository extends JpaRepository<OrdenCompra,Long>{
         FROM OrdenCompra oc
         JOIN FETCH oc.detalles d
         JOIN FETCH d.producto p
-        WHERE oc.tienda.id = :idTienda
-        AND oc.estado = 'PENDIENTE'
-        AND oc.proveedor.id = :idProveedor
+        WHERE oc.tienda.tiendaId = :idTienda
+        AND oc.ordenCompraId = :idOrden
     """)
-    List<OrdenCompra> listarOrdenesCompraPorTiendaYProveedor(
+    List<OrdenCompra> listarOrdenesCompraPorTiendaYOrdenCompra(
             @Param("idTienda") Long idTienda,
-            @Param("idProveedor") Long idProveedor
+            @Param("idOrden") Long idOrden
     );
 
     @Query("""
@@ -28,12 +28,22 @@ public interface OrdenCompraRepository extends JpaRepository<OrdenCompra,Long>{
         FROM OrdenCompra oc
         JOIN FETCH oc.detalles d
         JOIN FETCH d.producto p
-        WHERE oc.tienda.id = :idTienda
+        WHERE oc.tienda.tiendaId = :idTienda
         AND oc.estado = 'PENDIENTE'
     """)
     List<OrdenCompra> listarOrdenesCompraPorTienda(
             @Param("idTienda") Long idTienda
     );
 
+    @Query("""
+        SELECT oc
+        FROM OrdenCompra oc
+        WHERE oc.tienda.tiendaId = :idTienda    
+        AND oc.fechaCreacion >= :fechaDesde   
+    """)
+    List<OrdenCompra> listarOrdenesCompraPorTiendaHastaMesPasado(
+            @Param("idTienda") Long idTienda,
+            @Param("fechaDesde") LocalDateTime fechaDesde 
+    );
 
 }

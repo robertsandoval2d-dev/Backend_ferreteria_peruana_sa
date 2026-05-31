@@ -6,14 +6,15 @@ import org.springframework.web.server.ResponseStatusException;
 
 
 import com.ferreteriapsa.logistica.compra.repository.OrdenCompraRepository;
-import com.ferreteriapsa.logistica.inventario.dto.response.OrdenesCompraResponse;
-import com.ferreteriapsa.logistica.inventario.dto.response.ProductoDTO;
 import com.ferreteriapsa.logistica.catalogo.model.Producto;
 import com.ferreteriapsa.logistica.catalogo.model.Proveedor;
 import com.ferreteriapsa.logistica.catalogo.repository.ProductoRepository;
 import com.ferreteriapsa.logistica.catalogo.repository.ProveedorRepository;
 import com.ferreteriapsa.logistica.compra.dto.request.OrdenCompraRequest;
 import com.ferreteriapsa.logistica.compra.dto.response.OrdenCompraResponse;
+import com.ferreteriapsa.logistica.compra.dto.response.OrdenCompraSimpleResponse;
+import com.ferreteriapsa.logistica.compra.dto.response.OrdenesCompraResponse;
+import com.ferreteriapsa.logistica.compra.dto.response.ProductoDTO;
 import com.ferreteriapsa.logistica.compra.models.DetalleOrdenCompra;
 import com.ferreteriapsa.logistica.compra.models.OrdenCompra;
 import com.ferreteriapsa.logistica.planificacion.repository.DetalleCronogramaRepository;
@@ -116,9 +117,9 @@ public class CompraService {
         return res;
     }
 
-    //ALMACENERO-GET
+    @SuppressWarnings("null")
     @Transactional(readOnly = true)
-    public List<OrdenesCompraResponse> listarOrdenesPorTiendaYProveedor(Long trabajadorId, Long proveedorId) {
+    public List<OrdenesCompraResponse> listarOrdenesPorTiendaYProveedor(Long trabajadorId, Long ordenId) {
 
         Trabajador trabajador = trabajadorRepository.findById(trabajadorId)
                 .orElseThrow(() -> new ResponseStatusException( //404 NOT FOUND
@@ -138,13 +139,13 @@ public class CompraService {
 
         List<OrdenCompra> ordenesCompra;
 
-        if (proveedorId != null) {
+        if (ordenId != null) {
 
             ordenesCompra =
                     ordenCompraRepository
-                            .listarOrdenesCompraPorTiendaYProveedor(
+                            .listarOrdenesCompraPorTiendaYOrdenCompra(
                                     tiendaId,
-                                    proveedorId
+                                    ordenId
                             );
 
         } else {
@@ -217,5 +218,44 @@ public class CompraService {
 
         return ordenesCompraResponse;
     }
+    
+    @SuppressWarnings("null")
+    @Transactional(readOnly = true)
+    public List<OrdenCompraSimpleResponse> listarOrdenesCompraSimple(Long trabajadorId){
+        Trabajador trabajador = trabajadorRepository.findById(trabajadorId)
+                .orElseThrow(() -> new ResponseStatusException( //404 NOT FOUND
+                        HttpStatus.NOT_FOUND,
+                        "Trabajador no encontrado"
+                ));
+
+        Long tiendaId = trabajador.getAsignaciones().stream()
+                .filter(Asignacion::isActivo)
+                .map(asignacion -> asignacion.getTienda().getTiendaId())
+                .findFirst()
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.BAD_REQUEST,
+                        "El trabajador no tiene tienda activa")
+                );
+        
+        LocalDateTime fechaDesde = LocalDateTime.now().minusMonths(1);
+        List<OrdenCompra> ordenesCompra = ordenCompraRepository.listarOrdenesCompraPorTiendaHastaMesPasado(tiendaId, fechaDesde);
+
+        List<OrdenCompraSimpleResponse> ordenesCompraSimpleResponse =  ordenesCompra.stream()
+                .map(oc -> {
+                        OrdenCompraSimpleResponse ordenCompraSimpleResponse =
+                        new OrdenCompraSimpleResponse();
+
+                        ordenCompraSimpleResponse.setOrdenCompraId(oc.getOrdenCompraId());
+                        ordenCompraSimpleResponse.setNombreProveedor(oc.getProveedor().getNombre());
+                        ordenCompraSimpleResponse.setFechaCreacion(oc.getFechaCreacion());
+
+                        return ordenCompraSimpleResponse;
+
+                }).toList();
+
+        return ordenesCompraSimpleResponse;
+
+    }
+
     
 }

@@ -1,4 +1,4 @@
-package com.ferreteriapsa.logistica.inventario.dto.response;
+package com.ferreteriapsa.logistica.compra.dto.response;
 
 public class ProductoDTO {
     private Long productoId;
