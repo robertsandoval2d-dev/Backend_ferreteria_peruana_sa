@@ -5,7 +5,8 @@ import java.time.LocalDateTime;
 public class OrdenCompraSimpleResponse {
     private Long ordenCompraId;
     private String nombreProveedor;
-    private LocalDateTime fechaCreacion;
+    private LocalDateTime fechaEntrega;
+    private LocalDateTime fechaPlazoMaximo;
 
     public OrdenCompraSimpleResponse() {
     }
@@ -13,10 +14,12 @@ public class OrdenCompraSimpleResponse {
     public OrdenCompraSimpleResponse(
             Long ordenCompraId,
             String nombreProveedor,
-            LocalDateTime fechaCreacion) {
+            LocalDateTime fechaEntrega,
+            LocalDateTime fechaPlazoMaximo) {
         this.ordenCompraId = ordenCompraId;
         this.nombreProveedor = nombreProveedor;
-        this.fechaCreacion = fechaCreacion;
+        this.fechaEntrega = fechaEntrega;
+        this.fechaPlazoMaximo = fechaPlazoMaximo;
     }
 
     public Long getOrdenCompraId() {
@@ -35,11 +38,19 @@ public class OrdenCompraSimpleResponse {
         this.nombreProveedor = nombreProveedor;
     }
 
-    public LocalDateTime getFechaCreacion() {
-        return fechaCreacion;
+    public LocalDateTime getFechaPlazoMaximo() {
+        return fechaPlazoMaximo;
     }
 
-    public void setFechaCreacion(LocalDateTime fechaCreacion) {
-        this.fechaCreacion = fechaCreacion;
+    public void setFechaPlazoMaximo(LocalDateTime fechaPlazoMaximo) {
+        this.fechaPlazoMaximo = fechaPlazoMaximo;
+    }
+
+    public LocalDateTime getFechaEntrega() {
+        return fechaEntrega;
+    }
+
+    public void setFechaEntrega(LocalDateTime fechaEntrega) {
+        this.fechaEntrega = fechaEntrega;
     }
 }

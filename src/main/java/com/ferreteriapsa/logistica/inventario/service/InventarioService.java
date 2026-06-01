@@ -103,12 +103,17 @@ public class InventarioService {
 
         }
 
+        ordenCompra.setFechaEntrega(LocalDateTime.now());
+
         if (entregaParcial) {
             ordenCompra.setEstado("ENTREGADO-PARCIAL");
-        }else {
+        }else if(ordenCompra.getFechaEntrega().isAfter(ordenCompra.getPlazoFechaMaximo())){
+            ordenCompra.setEstado("ENTREGADO CON RETRASO");
+        }
+        else {
             ordenCompra.setEstado("ENTREGADO");
         }
-        ordenCompra.setFechaEntrega(LocalDateTime.now());
+
         ordenCompraRepository.save(ordenCompra);
 
     }

@@ -206,6 +206,10 @@ public class CompraService {
                                                 detalle.getCantidad()
                                         );
 
+                                        productoDTO.setPrecioUnidad(
+                                                detalle.getPrecioUnidad()
+                                        );
+
                                         return productoDTO;
 
                                     }).toList();
@@ -247,7 +251,8 @@ public class CompraService {
 
                         ordenCompraSimpleResponse.setOrdenCompraId(oc.getOrdenCompraId());
                         ordenCompraSimpleResponse.setNombreProveedor(oc.getProveedor().getNombre());
-                        ordenCompraSimpleResponse.setFechaCreacion(oc.getFechaCreacion());
+                        ordenCompraSimpleResponse.setFechaEntrega(oc.getFechaEntrega());
+                        ordenCompraSimpleResponse.setFechaPlazoMaximo(oc.getPlazoFechaMaximo());
 
                         return ordenCompraSimpleResponse;
 
