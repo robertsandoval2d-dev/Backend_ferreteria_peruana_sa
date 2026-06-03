@@ -1,4 +1,4 @@
-package com.ferreteriapsa.logistica.compra.models;
+package com.ferreteriapsa.logistica.compra.model;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;

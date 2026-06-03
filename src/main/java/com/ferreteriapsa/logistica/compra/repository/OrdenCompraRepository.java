@@ -1,9 +1,10 @@
 package com.ferreteriapsa.logistica.compra.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import com.ferreteriapsa.logistica.compra.models.OrdenCompra;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+
+import com.ferreteriapsa.logistica.compra.model.OrdenCompra;
 
 import java.time.LocalDateTime;
 import java.util.List;

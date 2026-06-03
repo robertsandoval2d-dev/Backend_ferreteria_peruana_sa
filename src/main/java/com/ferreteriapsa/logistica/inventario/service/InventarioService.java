@@ -1,11 +1,10 @@
 package com.ferreteriapsa.logistica.inventario.service;
 
 
-import com.ferreteriapsa.logistica.compra.models.DetalleOrdenCompra;
 import com.ferreteriapsa.logistica.compra.repository.OrdenCompraRepository;
+import com.ferreteriapsa.logistica.compra.model.DetalleOrdenCompra;
+import com.ferreteriapsa.logistica.compra.model.OrdenCompra;
 import com.ferreteriapsa.logistica.compra.repository.DetalleOrdenCompraRepository;
-import com.ferreteriapsa.logistica.compra.models.OrdenCompra;
-
 import com.ferreteriapsa.logistica.inventario.dto.response.InventarioDTO;
 import com.ferreteriapsa.logistica.inventario.dto.request.*;
 import com.ferreteriapsa.logistica.inventario.model.Inventario;
