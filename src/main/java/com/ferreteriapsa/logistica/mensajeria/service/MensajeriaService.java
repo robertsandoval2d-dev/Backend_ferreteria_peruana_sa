@@ -71,5 +71,33 @@ public class MensajeriaService {
         
         return response;
     }
+
+    @SuppressWarnings("null")
+    @Transactional
+    public MensajeResponse marcarMensajeComoLeido(Long mensajeId){
+        Mensaje mensaje = mensajeRepository.findById(mensajeId)
+            .orElseThrow(() -> new ResponseStatusException(//404 NOT FOUND
+                HttpStatus.NOT_FOUND,
+                "Mensaje no encontrado"
+            ));
+
+        mensaje.setLeido(true);
+
+        Mensaje mensajeGuardado = mensajeRepository.save(mensaje);
+
+        MensajeResponse response = new MensajeResponse();
+
+        response.setEmisorId(mensajeGuardado.getMensajeId());
+        response.setTitulo(mensajeGuardado.getTitulo());
+        response.setMensaje(mensajeGuardado.getMensaje());
+        response.setEmisorId(mensajeGuardado.getEmisor().getUsuarioId());
+        response.setEmisorUsername(mensaje.getEmisor().getUsername());
+        response.setReceptorId(mensaje.getReceptor().getUsuarioId());
+        response.setReceptorUsername(mensaje.getReceptor().getUsername());
+        response.setFechaEnvio(mensaje.getFechaEnvio());
+        response.setLeido(mensaje.getLeido());
+
+        return response;
+    }
     
 }

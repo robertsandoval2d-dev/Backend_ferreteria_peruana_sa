@@ -42,6 +42,13 @@ public class MensajeriaController {
         
         Long trabajadorId = principal.getTrabajadorId();
         List<MensajeResponse> mensajes = mensajeriaService.listarMensajesUsuario(trabajadorId);
-        return ResponseEntity.ok(mensajes);
+        return new ResponseEntity<>(mensajes,HttpStatus.OK);
+    }
+
+    @PreAuthorize("hasAnyRole('ALMACENERO','JEFE_DE_LINEA','ADMINISTRADOR_DE_TIENDA','ADMIN')")   
+    @PatchMapping("/mensajes/{id}")
+    public ResponseEntity<MensajeResponse> marcarMensajeComoLeido(@PathVariable("id") Long mensajeId){
+        MensajeResponse mensaje = mensajeriaService.marcarMensajeComoLeido(mensajeId);
+        return new ResponseEntity<>(mensaje,HttpStatus.OK);
     }
 }
