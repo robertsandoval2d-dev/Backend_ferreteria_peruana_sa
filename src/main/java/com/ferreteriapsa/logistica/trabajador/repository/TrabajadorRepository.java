@@ -18,6 +18,7 @@ public interface TrabajadorRepository extends JpaRepository<Trabajador, Long> {
             u.activo, 
             t.nombre, 
             t.dni,
+            t.mail,
             ti.tiendaId,
             ti.nombre,
             lp.lineaProductoId,

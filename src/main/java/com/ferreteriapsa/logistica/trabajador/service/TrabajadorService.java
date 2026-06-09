@@ -51,6 +51,7 @@ public class TrabajadorService {
         trabajador.setNombre(request.getNombre());
         trabajador.setDni(request.getDni());
         trabajador.setUsuario(usuario);
+        trabajador.setMail(request.getMail());
 
         // 3. Preparar los datos comunes para la Asignación
         trabajador = trabajadorRepository.save(trabajador);

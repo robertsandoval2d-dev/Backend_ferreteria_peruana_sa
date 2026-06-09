@@ -8,6 +8,7 @@ public class TrabajadorRequest {
     // datos usuario
     private String username;
     private String password;
+    private String mail;
     private String rol;
 
     // asignación
@@ -31,6 +32,10 @@ public class TrabajadorRequest {
 
     public String getPassword() {
         return password;
+    }
+
+    public String getMail(){
+        return mail;
     }
 
     public String getRol() {

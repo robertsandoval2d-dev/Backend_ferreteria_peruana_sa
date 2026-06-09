@@ -7,6 +7,7 @@ public class TrabajadorResponse {
     private Boolean cuentaActiva;
     private String nombre;
     private String dni;
+    private String mail;
     private Long tiendaId;
     private String nombreTienda;
     private Long lineaId;
@@ -23,7 +24,7 @@ public class TrabajadorResponse {
         this.dni = dni;
     }
     public TrabajadorResponse(Long trabajadorId,String rol, String username,Boolean cuentaActiva, String nombre, String dni,
-        Long tiendaId, String nombreTienda, Long lineaId, String nombreLinea
+        String mail, Long tiendaId, String nombreTienda, Long lineaId, String nombreLinea
     ) {
         this.trabajadorId = trabajadorId;
         this.rol = rol;
@@ -31,6 +32,7 @@ public class TrabajadorResponse {
         this.cuentaActiva = cuentaActiva;
         this.nombre = nombre;
         this.dni = dni;
+        this.mail = mail;
         this.tiendaId = tiendaId;
         this.nombreTienda = nombreTienda;
         this.lineaId = lineaId;
@@ -66,6 +68,12 @@ public class TrabajadorResponse {
     }
     public void setDni(String dni){
         this.dni = dni;
+    }
+    public String getMail(){
+        return mail;
+    }
+    public void setMail(String mail){
+        this.mail = mail;
     }
     public Long getTiendaId(){
         return tiendaId;

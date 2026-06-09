@@ -19,6 +19,8 @@ public class Trabajador {
     @Column(nullable = false, unique = true)
     private String dni;
 
+    @Column(nullable = false, unique = true)
+    private String mail;
     // Relación con Usuario (1 a 1)
     @OneToOne
     @JoinColumn(name = "usuario_id", nullable = false, unique = true)
@@ -57,6 +59,14 @@ public class Trabajador {
 
     public void setDni(String dni) {
         this.dni = dni;
+    }
+
+    public String getMail(){
+        return mail;
+    }
+
+    public void setMail(String mail){
+        this.mail = mail;
     }
 
     public Usuario getUsuario() {
