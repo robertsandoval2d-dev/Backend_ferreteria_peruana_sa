@@ -2,6 +2,8 @@ package com.ferreteriapsa.logistica.catalogo.model;
 
 import jakarta.persistence.*;
 
+import java.math.BigDecimal;
+
 import com.ferreteriapsa.logistica.trabajador.model.LineaProducto;
 
 @Entity
@@ -21,6 +23,9 @@ public class Producto {
 
     @Column(nullable = false)
     private String categoria;
+
+    @Column(name = "precio_venta", nullable = false)
+    private BigDecimal precioVenta;
 
     @ManyToOne(fetch = FetchType.LAZY) //Hace selects necesarios, primero la tabla si se solicita mas info la siguiente
     @JoinColumn(name = "linea_producto_id")
@@ -64,6 +69,14 @@ public class Producto {
 
     public String getCategoria() {
         return categoria;
+    }
+
+    public BigDecimal getPrecioVenta(){
+        return precioVenta;
+    }
+
+    public void setPrecioVenta(BigDecimal precioVenta){
+        this.precioVenta = precioVenta;
     }
 
     public LineaProducto getLineaProducto(){

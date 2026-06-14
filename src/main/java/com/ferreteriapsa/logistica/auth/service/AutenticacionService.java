@@ -11,7 +11,7 @@ import com.ferreteriapsa.logistica.auth.repository.*;
 import jakarta.transaction.Transactional;
 
 import com.ferreteriapsa.logistica.auth.dto.request.UsuarioRequest;
-import com.ferreteriapsa.logistica.auth.dto.response.AuthResponse;
+import com.ferreteriapsa.logistica.auth.dto.response.*;
 import com.ferreteriapsa.logistica.auth.config.JwtService;
 
 @Service
@@ -68,7 +68,7 @@ public class AutenticacionService implements AutenticacionInterface{
         usuarioRepository.save(usuario);
     }
 
-    public AuthResponse login(UsuarioRequest request) {
+    public Auth login(UsuarioRequest request) {
 
         // 1. Buscar usuario
         Usuario usuario = usuarioRepository.findByUsername(request.getUsername())
@@ -93,11 +93,36 @@ public class AutenticacionService implements AutenticacionInterface{
             );
         }
 
-        // 4. Generar token
+        // 4. Generar token y refreshToken
          String token = jwtService.generateToken(usuario);
+         String refreshToken = jwtService.generateRefreshToken(usuario);
 
         // 5. Devolver token
-        return new AuthResponse(token);
+        return new Auth(token, refreshToken);
+    }
 
+    public AuthResponse refreshToken(String refreshToken){
+        String username = jwtService.extractUsername(refreshToken);
+
+        Usuario usuario = usuarioRepository.findByUsername(username)
+        .orElseThrow(() -> new ResponseStatusException( //401 UNAUTHORIZED
+        HttpStatus.UNAUTHORIZED,
+        "Usuario no encontrado"
+        ));
+
+        if (!usuario.isActivo()) {
+            throw new ResponseStatusException( //403 FORBIDDEN
+                    HttpStatus.FORBIDDEN,
+                    "Usuario deshabilitado"
+            );
+        }
+        
+        if(!jwtService.isTokenValid(refreshToken, usuario)){
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Sesión expirada");
+        }
+
+        String token = jwtService.generateToken(usuario);
+
+        return new AuthResponse(token);
     }
 }

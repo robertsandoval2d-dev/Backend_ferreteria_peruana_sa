@@ -35,6 +35,8 @@ public class SecurityConfig {
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll() //ADDED
                 .requestMatchers("/logistica/auth/login","/error").permitAll() // público
+                .requestMatchers("/logistica/auth/refresh").permitAll() // público
+                .requestMatchers("/logistica/auth/logout").permitAll()
                 .requestMatchers("/logistica/trabajadores/registrar").hasRole("ADMIN")
                 .anyRequest().authenticated()         // protegido
             )
