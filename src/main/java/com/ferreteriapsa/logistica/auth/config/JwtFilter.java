@@ -80,9 +80,15 @@ public class JwtFilter extends OncePerRequestFilter {
             return; 
             
         } catch (Exception e) {
+
+//            response.getWriter().write("{\"error\": \"Token inválido o manipulado.\"}");
+
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             response.setContentType("application/json");
-            response.getWriter().write("{\"error\": \"Token inválido o manipulado.\"}");
+            response.getWriter().write(
+                    "{\"error\": \"Token inválido o manipulado.\", " +
+                            "\"detalle\": \"" + e.getMessage().replace("\"", "'") + "\"}"
+            );
             return;
         }
     }

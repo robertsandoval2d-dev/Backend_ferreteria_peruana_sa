@@ -47,15 +47,26 @@ public interface OrdenCompraRepository extends JpaRepository<OrdenCompra,Long>{
             @Param("fechaDesde") LocalDateTime fechaDesde 
     );
 
+//    @Query("""
+//        SELECT DISTINCT oc
+//        FROM OrdenCompra oc
+//        JOIN FETCH oc.proveedor p
+//        WHERE oc.tienda.tiendaId = :idTienda
+//        AND oc.estado = 'ENTREGADO CON RETRASO'
+//    """)
+//    List<OrdenCompra> listarOrdenesCompraConRetraso(
+//            @Param("idTienda") Long idTienda
+//    );
+
     @Query("""
-        SELECT DISTINCT oc
-        FROM OrdenCompra oc
-        JOIN FETCH oc.proveedor p
-        WHERE oc.tienda.tiendaId = :idTienda
-        AND oc.estado = 'ENTREGADO CON RETRASO'
+        SELECT o 
+        FROM OrdenCompra o 
+        WHERE o.tienda.tiendaId = :tiendaId
+        AND o.estado = 'ENTREGADO CON RETRASO'
+        AND NOT EXISTS (SELECT p FROM Penalidad p WHERE p.ordenCompra = o)
     """)
     List<OrdenCompra> listarOrdenesCompraConRetraso(
-            @Param("idTienda") Long idTienda
+            @Param("tiendaId") Long tiendaId
     );
 
 }

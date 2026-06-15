@@ -24,7 +24,7 @@ public class Usuario {
     private Rol rol;
 
     @Column(nullable = false)
-    private boolean activo=true;
+    private boolean activo = true;
 
     @OneToOne(mappedBy = "usuario")
     private Trabajador trabajador;

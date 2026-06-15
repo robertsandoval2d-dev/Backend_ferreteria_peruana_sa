@@ -1,5 +1,6 @@
 package com.ferreteriapsa.logistica.penalidad.service;
 
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 import org.springframework.http.HttpStatus;
@@ -74,6 +75,13 @@ public class PenalidadService {
                     or.setProveedor(orden.getProveedor().getNombre());
                     or.setFechaEntrega(orden.getFechaEntrega());
                     or.setFechaLimite(orden.getPlazoFechaMaximo());
+                    Integer diasRetraso = (int)  ChronoUnit.DAYS.between(
+                            orden.getPlazoFechaMaximo().toLocalDate(),
+                            orden.getFechaEntrega().toLocalDate()
+                    );
+
+                    or.setDiasRetraso(diasRetraso);
+                    or.setMonto(orden.getMontoTotalCalculado());
                     or.setEstado(orden.getEstado());
 
                     return or;

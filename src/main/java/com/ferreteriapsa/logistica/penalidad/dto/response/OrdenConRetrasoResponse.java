@@ -1,5 +1,6 @@
 package com.ferreteriapsa.logistica.penalidad.dto.response;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 public class OrdenConRetrasoResponse {
@@ -7,9 +8,25 @@ public class OrdenConRetrasoResponse {
     private String proveedor;
     private LocalDateTime fechaEntrega;
     private LocalDateTime fechaLimite;
+    private Integer diasRetraso;
+    private BigDecimal monto;
     private String estado;
 
     public OrdenConRetrasoResponse (){}
+
+    public BigDecimal getMonto() {
+        return monto;
+    }
+    public void setMonto(BigDecimal monto) {
+        this.monto = monto;
+    }
+
+    public Integer getDiasRetraso() {
+        return diasRetraso;
+    }
+    public void setDiasRetraso(Integer diasRetraso) {
+        this.diasRetraso = diasRetraso;
+    }
 
     public Long getOrdenCompraId() { return ordenCompraId; }
     public void setOrdenCompraId(Long ordenCompraId) { this.ordenCompraId = ordenCompraId; }
