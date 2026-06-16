@@ -168,103 +168,108 @@ public class TrabajadorService {
         trabajador.setDni(request.getDni());
         trabajador = trabajadorRepository.save(trabajador);
 
+        TrabajadorUpdateResponse response = new TrabajadorUpdateResponse();
+
         // 5. Gestionar la rotación/cambio de tienda o línea
         // Buscamos si ya tiene una asignación activa actualmente
-        Asignacion asignacionActual = asignacionRepository.findByTrabajadorAndActivoTrue(trabajador)
-            .orElse(null);
-
-        Tienda nuevaTienda = tiendaRepository.findById(request.getTiendaId())
-            .orElseThrow(() -> new ResponseStatusException( //404 NOT FOUND
-                    HttpStatus.NOT_FOUND,
-                    "Tienda no encontrada"
-            ));
-
-        // Verificamos si los datos de asignación han cambiado
-        boolean cambioTienda = (asignacionActual == null) || !asignacionActual.getTienda().getTiendaId().equals(request.getTiendaId());
-        boolean cambioLinea = false;
-
-        if (rol.equals("jefe_de_linea") && asignacionActual != null) {
-            Long lineaActualId = (asignacionActual.getLineaProducto() != null) ? asignacionActual.getLineaProducto().getLineaProductoId() : null;
-            cambioLinea = !request.getLineaId().equals(lineaActualId);
-        }
-
-        // Si hubo algún cambio en tienda o línea, cerramos la anterior y creamos una nueva
-        if (cambioTienda || cambioLinea) {
+        if(!rol.equals("admin")){
+            Asignacion asignacionActual = asignacionRepository.findByTrabajadorAndActivoTrue(trabajador)
+                .orElseThrow(() -> new ResponseStatusException( //404 NOT FOUND
+                        HttpStatus.NOT_FOUND,
+                        "Asignación no existe"
+                ));
             
-            // A) Cerrar la asignación anterior del trabajador (Trazabilidad)
-            if (asignacionActual != null) {
-                // 1. Inactivamos su periodo en el puesto anterior
-                asignacionActual.setActivo(false);
-                asignacionActual.setFechaFin(LocalDate.now());
-                asignacionRepository.save(asignacionActual);
+            Tienda nuevaTienda = tiendaRepository.findById(request.getTiendaId())
+                .orElseThrow(() -> new ResponseStatusException( //404 NOT FOUND
+                        HttpStatus.NOT_FOUND,
+                        "Tienda no encontrada"
+                ));
 
-                // 2. Creamos la vacante SOLAMENTE si es un rol que requiere un puesto específico (Jefe de Línea)
-                if (rol.equals("jefe_de_linea")) {
-                    Asignacion vacanteDejada = new Asignacion();
-                    vacanteDejada.setTienda(asignacionActual.getTienda());
-                    vacanteDejada.setLineaProducto(asignacionActual.getLineaProducto());
-                    vacanteDejada.setTrabajador(null); 
-                    vacanteDejada.setFechaInicio(null);
-                    vacanteDejada.setFechaFin(null);
-                    vacanteDejada.setActivo(true); 
-                    
-                    asignacionRepository.save(vacanteDejada);
-                }
+            // Verificamos si los datos de asignación han cambiado
+            boolean cambioTienda = (asignacionActual == null) || !asignacionActual.getTienda().getTiendaId().equals(request.getTiendaId());
+            boolean cambioLinea = false;
+
+            if (rol.equals("jefe_de_linea") && asignacionActual != null) {
+                Long lineaActualId = (asignacionActual.getLineaProducto() != null) ? asignacionActual.getLineaProducto().getLineaProductoId() : null;
+                cambioLinea = !request.getLineaId().equals(lineaActualId);
             }
 
-            // B) Lógica de ocupación de nuevo puesto
-            if (rol.equals("jefe_de_linea")) {
-                LineaProducto linea = lineaRepository.findById(request.getLineaId())
-                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Línea no encontrada"));
+            // Si hubo algún cambio en tienda o línea, cerramos la anterior y creamos una nueva
+            if (cambioTienda || cambioLinea) {
+                
+                // A) Cerrar la asignación anterior del trabajador (Trazabilidad)
+                if (asignacionActual != null) {
+                    // 1. Inactivamos su periodo en el puesto anterior
+                    asignacionActual.setActivo(false);
+                    asignacionActual.setFechaFin(LocalDate.now());
+                    asignacionRepository.save(asignacionActual);
 
-                // Buscamos la configuración de esa línea en esa nueva tienda
-                Optional<Asignacion> asignacionPreviaOpt = asignacionRepository
-                    .findByTiendaAndLineaProductoAndActivoTrue(nuevaTienda, linea);
+                    // 2. Creamos la vacante SOLAMENTE si es un rol que requiere un puesto específico (Jefe de Línea)
+                    if (rol.equals("jefe_de_linea")) {
+                        Asignacion vacanteDejada = new Asignacion();
+                        vacanteDejada.setTienda(asignacionActual.getTienda());
+                        vacanteDejada.setLineaProducto(asignacionActual.getLineaProducto());
+                        vacanteDejada.setTrabajador(null); 
+                        vacanteDejada.setFechaInicio(null);
+                        vacanteDejada.setFechaFin(null);
+                        vacanteDejada.setActivo(true); 
+                        
+                        asignacionRepository.save(vacanteDejada);
+                    }
+                }
 
-                if (asignacionPreviaOpt.isPresent()) {
-                    Asignacion previa = asignacionPreviaOpt.get();
+                // B) Lógica de ocupación de nuevo puesto
+                if (rol.equals("jefe_de_linea")) {
+                    LineaProducto linea = lineaRepository.findById(request.getLineaId())
+                        .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Línea no encontrada"));
 
-                    if (previa.getTrabajador() == null) {
-                        // CASO 1: Puesto Vacante -> Lo ocupamos
-                        previa.setTrabajador(trabajador);
-                        previa.setFechaInicio(LocalDate.now());
-                        asignacionRepository.save(previa);
-                    } else if (!previa.getTrabajador().getTrabajadorId().equals(trabajador.getTrabajadorId())) {
-                        // CASO 2: Puesto Ocupado por OTRO -> Inactivamos al anterior y creamos nuevo
-                        previa.setActivo(false);
-                        previa.setFechaFin(LocalDate.now());
-                        asignacionRepository.save(previa);
+                    // Buscamos la configuración de esa línea en esa nueva tienda
+                    Optional<Asignacion> asignacionPreviaOpt = asignacionRepository
+                        .findByTiendaAndLineaProductoAndActivoTrue(nuevaTienda, linea);
 
-                        Asignacion nuevaAsignacion = new Asignacion();
-                        nuevaAsignacion.setTrabajador(trabajador);
-                        nuevaAsignacion.setTienda(nuevaTienda);
-                        nuevaAsignacion.setLineaProducto(linea);
-                        nuevaAsignacion.setFechaInicio(LocalDate.now());
-                        nuevaAsignacion.setActivo(true);
-                        asignacionRepository.save(nuevaAsignacion);
+                    if (asignacionPreviaOpt.isPresent()) {
+                        Asignacion previa = asignacionPreviaOpt.get();
+
+                        if (previa.getTrabajador() == null) {
+                            // CASO 1: Puesto Vacante -> Lo ocupamos
+                            previa.setTrabajador(trabajador);
+                            previa.setFechaInicio(LocalDate.now());
+                            asignacionRepository.save(previa);
+                        } else if (!previa.getTrabajador().getTrabajadorId().equals(trabajador.getTrabajadorId())) {
+                            // CASO 2: Puesto Ocupado por OTRO -> Inactivamos al anterior y creamos nuevo
+                            previa.setActivo(false);
+                            previa.setFechaFin(LocalDate.now());
+                            asignacionRepository.save(previa);
+
+                            Asignacion nuevaAsignacion = new Asignacion();
+                            nuevaAsignacion.setTrabajador(trabajador);
+                            nuevaAsignacion.setTienda(nuevaTienda);
+                            nuevaAsignacion.setLineaProducto(linea);
+                            nuevaAsignacion.setFechaInicio(LocalDate.now());
+                            nuevaAsignacion.setActivo(true);
+                            asignacionRepository.save(nuevaAsignacion);
+                        }
+                    } else {
+                        // CASO 3: Línea no habilitada en la tienda
+                        throw new ResponseStatusException(HttpStatus.BAD_REQUEST, 
+                            "Error: La tienda " + nuevaTienda.getNombre() + " no tiene habilitada la línea " + linea.getNombre());
                     }
                 } else {
-                    // CASO 3: Línea no habilitada en la tienda
-                    throw new ResponseStatusException(HttpStatus.BAD_REQUEST, 
-                        "Error: La tienda " + nuevaTienda.getNombre() + " no tiene habilitada la línea " + linea.getNombre());
+                    // Para roles generales (Almacenero, Admin Tienda)
+                    Asignacion nuevaAsignacion = new Asignacion();
+                    nuevaAsignacion.setTrabajador(trabajador);
+                    nuevaAsignacion.setTienda(nuevaTienda);
+                    nuevaAsignacion.setFechaInicio(LocalDate.now());
+                    nuevaAsignacion.setActivo(true);
+                    asignacionRepository.save(nuevaAsignacion);
                 }
-            } else {
-                // Para roles generales (Almacenero, Admin Tienda)
-                Asignacion nuevaAsignacion = new Asignacion();
-                nuevaAsignacion.setTrabajador(trabajador);
-                nuevaAsignacion.setTienda(nuevaTienda);
-                nuevaAsignacion.setFechaInicio(LocalDate.now());
-                nuevaAsignacion.setActivo(true);
-                asignacionRepository.save(nuevaAsignacion);
             }
+            response.setNombreTienda(nuevaTienda.getNombre());
         }
-
         // 6. Construir respuesta
-        TrabajadorUpdateResponse response = new TrabajadorUpdateResponse();
         response.setTrabajadorId(trabajador.getTrabajadorId());
         response.setNombre(trabajador.getNombre());
         response.setDni(trabajador.getDni());
-        response.setNombreTienda(nuevaTienda.getNombre());
         
         if (rol.equals("jefe_de_linea")) {
             LineaProducto lp = lineaRepository.findById(request.getLineaId()).get();
