@@ -1,12 +1,13 @@
 package com.ferreteriapsa.logistica.ventas.service;
 
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
-import com.ferreteriapsa.logistica.ventas.dto.response.PedidoRetrasado;
+import com.ferreteriapsa.logistica.ventas.dto.response.PedidoRetrasadoResponse;
 import com.ferreteriapsa.logistica.ventas.model.Pedido;
 import com.ferreteriapsa.logistica.ventas.repository.PedidoRepository;
 import com.ferreteriapsa.logistica.trabajador.model.Asignacion;
@@ -24,7 +25,7 @@ public class VentasService {
     }
 
     @SuppressWarnings("null")
-    public List<PedidoRetrasado> listarPedidosRetrasados(Long trabajadorId) {
+    public List<PedidoRetrasadoResponse> listarPedidosRetrasados(Long trabajadorId) {
         
         Trabajador trabajador = trabajadorRepository.findById(trabajadorId)
                 .orElseThrow(() -> new ResponseStatusException(
@@ -43,9 +44,9 @@ public class VentasService {
 
         List<Pedido> pedidos = pedidoRepository.listarPedidosEntregadosTarde(tiendaId);
 
-        List<PedidoRetrasado> response = pedidos.stream()
+        List<PedidoRetrasadoResponse> response = pedidos.stream()
                 .map(pedido -> {
-                    PedidoRetrasado pr = new PedidoRetrasado();
+                    PedidoRetrasadoResponse pr = new PedidoRetrasadoResponse();
                     
                     // Datos del cliente
                     pr.setClienteId(pedido.getCliente().getClienteId());
@@ -56,6 +57,12 @@ public class VentasService {
                     pr.setFechaMaximaEntrega(pedido.getFechaEntregaMaxima());
                     pr.setFechaEntrega(pedido.getFechaEntrega());
                     pr.setMontoTotalPedido(pedido.getMontoTotal());
+                    Integer diasRetraso = (int) ChronoUnit.DAYS.between(
+                        pedido.getFechaEntregaMaxima().toLocalDate(),
+                        pedido.getFechaEntrega().toLocalDate()
+                    );
+                    pr.setDiasRetraso(diasRetraso);
+                    pr.setEstado(pedido.getEstado());
 
                     return pr;
                 }).toList();

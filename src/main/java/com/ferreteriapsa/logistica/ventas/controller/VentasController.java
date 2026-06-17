@@ -23,12 +23,12 @@ public class VentasController {
 
     @PreAuthorize("hasRole('JEFE_DE_LINEA')")
     @GetMapping("/clientes/afectados-retraso")
-    public ResponseEntity<List<PedidoRetrasado>> listarPedidosRetrasados(
+    public ResponseEntity<List<PedidoRetrasadoResponse>> listarPedidosRetrasados(
             @AuthenticationPrincipal CustomUserPrincipal principal) {
             
         Long trabajadorId = principal.getTrabajadorId();
         
-        List<PedidoRetrasado> pedidos = ventasService.listarPedidosRetrasados(trabajadorId);
+        List<PedidoRetrasadoResponse> pedidos = ventasService.listarPedidosRetrasados(trabajadorId);
         
         return ResponseEntity.ok(pedidos);
     }

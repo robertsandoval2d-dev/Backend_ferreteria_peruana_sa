@@ -11,12 +11,12 @@ import com.ferreteriapsa.logistica.ventas.model.Pedido;
 public interface PedidoRepository extends JpaRepository<Pedido, Long> {
     
     @Query("""
-        SELECT DISTINCT p
+        SELECT p
         FROM Pedido p
         JOIN FETCH p.cliente c
         WHERE p.tienda.tiendaId = :idTienda
-        AND p.fechaEntrega IS NOT NULL
-        AND p.fechaEntrega > p.fechaEntregaMaxima
+        AND p.estado = 'ENTREGADO CON RETRASO'
+        AND NOT EXISTS(SELECT c FROM Compensacion c WHERE c.pedido = p)
     """)
     List<Pedido> listarPedidosEntregadosTarde(@Param("idTienda") Long idTienda);
     
