@@ -37,9 +37,11 @@ public class InventarioController {
     @PreAuthorize("hasRole('ALMACENERO')")
     @PostMapping("/ordenes-compra/recepcion")
     public ResponseEntity<Map<String,String>> registrarRecepcion(
-            @RequestBody RegistroMercaderiaRequest request){
+            @RequestBody RegistroMercaderiaRequest request,
+            @AuthenticationPrincipal CustomUserPrincipal principal){
 
-        inventarioService.regitrarOrdenCompra(request);
+        Long trabajadorId = principal.getTrabajadorId();
+        inventarioService.regitrarOrdenCompra(request, trabajadorId);
 
         return ResponseEntity.ok(
                 Map.of("mensaje", "Mercadería recepcionada correctamente")

@@ -5,7 +5,6 @@ import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 
 import com.ferreteriapsa.logistica.catalogo.model.Producto;
-import com.ferreteriapsa.logistica.trabajador.model.Almacen;
 
 @Entity
 @Table(name = "inventarios")
@@ -35,19 +34,10 @@ public class Inventario {
     private Producto producto;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "almacen_id", nullable = false)
-    private Almacen almacen;
+    @JoinColumn(name = "zona_almacen_id", nullable = false)
+    private ZonaAlmacen zonaAlmacen;
 
     public Inventario() {}
-
-    public Inventario(Long inventarioId, Integer stock, Integer stockMin, Rotacion rotacion, Producto producto, Almacen almacen) {
-        this.inventarioId = inventarioId;
-        this.stock = stock;
-        this.stockMin = stockMin;
-        this.rotacion = rotacion;
-        this.producto = producto;
-        this.almacen = almacen;
-    }
 
     public Long getInventarioId() {
         return inventarioId;
@@ -89,12 +79,12 @@ public class Inventario {
         this.producto = producto;
     }
 
-    public Almacen getAlmacen() {
-        return almacen;
+    public ZonaAlmacen getZonaAlmacen() {
+        return zonaAlmacen;
     }
 
-    public void setAlmacen(Almacen almacen) {
-        this.almacen = almacen;
+    public void setZonaAlmacen(ZonaAlmacen zonaAlmacen) {
+        this.zonaAlmacen = zonaAlmacen;
     }
 }
 

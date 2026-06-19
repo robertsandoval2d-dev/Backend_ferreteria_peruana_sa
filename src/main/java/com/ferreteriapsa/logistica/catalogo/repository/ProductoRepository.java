@@ -9,24 +9,6 @@ import com.ferreteriapsa.logistica.catalogo.model.Producto;
 import java.util.List;
 
 public interface ProductoRepository extends JpaRepository<Producto, Long> {
-    // @Query(value = """
-    //     SELECT 
-    //         p.producto_id as productoId,
-    //         p.nombre as productoNombre,
-    //         pr.proveedor_id as proveedorId,
-    //         pr.nombre as proveedorNombre
-    //     FROM asignaciones a
-    //     JOIN lineas_producto l ON a.linea_producto_id = l.linea_producto_id
-    //     JOIN productos p ON p.linea_producto_id = l.linea_producto_id
-    //     LEFT JOIN productos_proveedores pp ON pp.producto_id = p.producto_id
-    //     LEFT JOIN proveedores pr ON pr.proveedor_id = pp.proveedor_id
-    //     WHERE a.trabajador_id = :trabajadorId
-    //     AND a.activo = true
-    //     ORDER BY p.producto_id, pr.proveedor_id
-    // """, nativeQuery = true)
-    // List<CatalogoProjection> obtenerCatalogoPorTrabajador(
-    //     @Param("trabajadorId") Long trabajadorId
-    // );
 
     @Query(value = """
         SELECT 
@@ -37,7 +19,8 @@ public interface ProductoRepository extends JpaRepository<Producto, Long> {
         FROM asignaciones a
         JOIN tiendas t ON a.tienda_id = t.tienda_id
         JOIN productos p ON p.linea_producto_id = a.linea_producto_id
-        JOIN inventarios i ON i.producto_id = p.producto_id AND i.almacen_id = t.almacen_id
+        JOIN inventarios i ON i.producto_id = p.producto_id
+        JOIN zonas_almacen z ON z.zona_almacen_id = i.zona_almacen_id AND z.almacen_id = t.almacen_id
         LEFT JOIN productos_proveedores pp ON pp.producto_id = p.producto_id
         LEFT JOIN proveedores pr ON pr.proveedor_id = pp.proveedor_id
         WHERE a.trabajador_id = :trabajadorId

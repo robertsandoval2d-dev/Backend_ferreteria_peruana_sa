@@ -11,26 +11,6 @@ import java.util.Optional;
 
 @Repository
 public interface InventarioRepository extends JpaRepository<Inventario, Long> {
-// @Query("""
-//     SELECT new com.ferreteriapsa.logistica.inventario.dto.response.InventarioDTO(
-//         p.productoId, 
-//         p.nombre, 
-//         i.stock, 
-//         i.stockMin, 
-//         CAST(i.rotacion AS string), 
-//         p.categoria
-//     )
-//     FROM Inventario i
-//     JOIN i.producto p
-//     JOIN p.lineaProducto lp
-//     WHERE lp.lineaProductoId IN (
-//         SELECT a.lineaProducto.lineaProductoId
-//         FROM Asignacion a
-//         WHERE a.trabajador.trabajadorId = :trabajadorId
-//           AND a.activo = true
-//     )
-// """)
-// List<InventarioDTO> buscarProductosPorJefeId(@Param("trabajadorId") Long trabajadorId);
 
     @Query("""
         SELECT new com.ferreteriapsa.logistica.inventario.dto.response.InventarioDTO(
@@ -49,12 +29,10 @@ public interface InventarioRepository extends JpaRepository<Inventario, Long> {
             WHERE a.trabajador.trabajadorId = :trabajadorId
             AND a.activo = true
             AND a.lineaProducto = p.lineaProducto
-            AND a.tienda.almacen = i.almacen
+            AND a.tienda.almacen = i.zonaAlmacen.almacen
         )
     """)
     List<InventarioDTO> buscarProductosPorJefeId(@Param("trabajadorId") Long trabajadorId);
 
-    Optional<Inventario> findByProductoProductoId(
-            Long productoId
-    );
+    Optional<Inventario> findByProductoProductoIdAndZonaAlmacenAlmacenAlmacenId(Long productoId, Long almacenId);
 }

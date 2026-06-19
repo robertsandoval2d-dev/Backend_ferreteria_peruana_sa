@@ -293,7 +293,10 @@ public class TrabajadorService {
         Asignacion asignacionActual = trabajador.getAsignaciones().stream()
                 .filter(Asignacion::isActivo)
                 .findFirst()
-                .orElse(null);
+                .orElseThrow(() -> new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    "El trabajador no posee una tienda activa asignada"
+                 ));
 
         if (asignacionActual != null) {
             // 4. Cerramos la asignación actual (aplica para todos los roles)
