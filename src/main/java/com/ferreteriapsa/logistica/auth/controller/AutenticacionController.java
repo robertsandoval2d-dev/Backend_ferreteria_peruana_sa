@@ -28,10 +28,10 @@ public class AutenticacionController {
                 "refresh_token",
                 credenciales.getRefreshToken())
                 .httpOnly(true)
-                .secure(false) // false en localhost
+                .secure(true) // false en localhost
                 .path("/")
                 .maxAge(86400) //1 dia * 24 * 60 * 60
-                .sameSite("Lax")
+                .sameSite("None")
                 .build();
 
         AuthResponse token = new AuthResponse(credenciales.getToken());
@@ -55,10 +55,10 @@ public class AutenticacionController {
                 "refresh_token",
                 "")
                 .httpOnly(true)
-                .secure(false)
+                .secure(true)
                 .path("/")
                 .maxAge(0)
-                .sameSite("Lax")
+                .sameSite("None")
                 .build();
 
         return ResponseEntity.ok()

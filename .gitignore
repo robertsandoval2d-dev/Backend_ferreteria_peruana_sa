@@ -16,7 +16,7 @@ release.properties
 Thumbs.db
 
 # Config sensibles
-application.properties
+.env
 application.yml
 
 # Logs

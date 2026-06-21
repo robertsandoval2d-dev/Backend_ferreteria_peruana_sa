@@ -1,5 +1,6 @@
 package com.ferreteriapsa.logistica.auth.config;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod; //ADDED
@@ -16,6 +17,8 @@ import java.util.Arrays; //ADDED
 @EnableMethodSecurity //Habilita la seguridad a nivel de métodos
 @Configuration
 public class SecurityConfig {
+    @Value("${cors.allowed-origin}")
+    private String allowedOrigin;
     private final JwtFilter jwtFilter;
     public SecurityConfig(JwtFilter jwtFilter) {
         this.jwtFilter = jwtFilter;
@@ -50,7 +53,7 @@ public class SecurityConfig {
     CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
         // Permite tu Frontend
-        configuration.setAllowedOrigins(Arrays.asList("http://localhost:4200")); 
+        configuration.setAllowedOrigins(Arrays.asList(allowedOrigin)); 
         // Permite los métodos que usa Angular
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
         // Permite las cabeceras estándar y el envío del Token
