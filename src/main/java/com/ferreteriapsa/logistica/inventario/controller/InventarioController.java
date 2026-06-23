@@ -3,6 +3,9 @@ package com.ferreteriapsa.logistica.inventario.controller;
 import java.util.List;
 import java.util.Map;
 
+import com.ferreteriapsa.logistica.inventario.dto.request.ProductoRotacionDTO;
+import com.ferreteriapsa.logistica.mensajeria.dto.response.MensajeResponse;
+import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -47,4 +50,18 @@ public class InventarioController {
                 Map.of("mensaje", "Mercadería recepcionada correctamente")
         );
     }
+
+    @PreAuthorize("hasRole('JEFE_DE_LINEA')")
+    @PatchMapping("/productos/{id}")
+    public ResponseEntity<ProductoRotacionDTO> cambiarRotacion(
+            @PathVariable("id") Long productoId,
+            @RequestBody ProductoRotacionDTO request
+    ){
+        ProductoRotacionDTO rotacion = inventarioService.cambiarRotacion(productoId, request);
+        return new ResponseEntity<>(rotacion,HttpStatus.OK);
+    }
+
+
+
+
 }

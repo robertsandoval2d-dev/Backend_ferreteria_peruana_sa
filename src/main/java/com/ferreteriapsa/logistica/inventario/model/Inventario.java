@@ -88,9 +88,4 @@ public class Inventario {
     }
 }
 
-//Acción correcta crear una carpeta e incluirla: model/entity/... y model/enums/Rotacion.java
-enum Rotacion {
-    BAJA, MEDIA, ALTA
-}
-
 

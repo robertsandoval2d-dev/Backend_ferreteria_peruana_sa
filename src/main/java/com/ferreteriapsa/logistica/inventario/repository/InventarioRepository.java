@@ -66,4 +66,8 @@ public interface InventarioRepository extends JpaRepository<Inventario, Long> {
             @Param("trabajadorId") Long trabajadorId, 
             @Param("fechaLimite") LocalDateTime fechaLimite
     );
+
+
+    Optional<Inventario> findByProductoProductoId(Long productoId);
+
 }

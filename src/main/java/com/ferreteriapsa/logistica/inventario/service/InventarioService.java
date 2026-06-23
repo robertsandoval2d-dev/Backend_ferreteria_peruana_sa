@@ -145,4 +145,23 @@ public class InventarioService {
         ordenCompraRepository.save(ordenCompra);
     }
 
+
+    @Transactional
+    public ProductoRotacionDTO cambiarRotacion(Long productoId, ProductoRotacionDTO request) {
+        if(request.getRotacion() == null){
+            throw new RuntimeException("La rotación es obligatoria");
+        }
+
+        Inventario inventario = inventarioRepository.findByProductoProductoId(productoId)
+                .orElseThrow(() -> new RuntimeException("Inventario no encontrado"));
+
+        inventario.setRotacion(request.getRotacion());
+
+        inventarioRepository.save(inventario);
+
+        ProductoRotacionDTO response = new ProductoRotacionDTO();
+        response.setRotacion(inventario.getRotacion());
+
+        return response;
+    }
 }
